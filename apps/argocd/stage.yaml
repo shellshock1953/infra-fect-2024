@@ -1,10 +1,10 @@
 be:
   env: stage
-  branch: SSP-22
+  branch: main
   values:
     - stage.yaml
 fe:
   env: stage
-  branch: SSP-22
+  branch: main
   values:
     - stage.yaml
