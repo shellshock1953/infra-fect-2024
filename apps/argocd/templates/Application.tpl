@@ -12,10 +12,13 @@ spec:
   source:
     path: apps/be
     repoURL: https://github.com/shellshock1953/infra-fect-2024
-    targetRevision: main
+    targetRevision: {{ .Values.be.branch }}
     helm:
       valueFiles:
         {{- toYaml .Values.be.values | nindent 8 }}
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
 ---
 # FRONTEND
 apiVersion: argoproj.io/v1alpha1
@@ -31,7 +34,10 @@ spec:
   source:
     path: apps/fe
     repoURL: https://github.com/shellshock1953/infra-fect-2024
-    targetRevision: main
+    targetRevision: {{ .Values.fe.branch }}
     helm:
       valueFiles:
         {{- toYaml .Values.fe.values | nindent 8 }}
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

@@ -1,3 +1,5 @@
+sysenv: stage
+
 name: fect-be
 replicas: 1
   
