@@ -1,0 +1,6 @@
+---
+apiVersion: v2
+appVersion: 0.0.1
+description: A Helm chart for FECT 2024 ArgoCD
+name: fect-backend
+version: 0.0.1
