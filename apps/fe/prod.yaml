@@ -1,3 +1,5 @@
+sysenv: prod
+
 name: fect-fe
 replicas: 1
   
