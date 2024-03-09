@@ -1,10 +1,10 @@
 be:
   env: prod
-  branch: main
+  branch: SSP-22
   values:
     - prod.yaml
 fe:
   env: prod
-  branch: main
+  branch: SSP-22
   values:
     - prod.yaml

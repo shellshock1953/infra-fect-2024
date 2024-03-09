@@ -8,7 +8,7 @@ spec:
   destination:
     namespace: fect-{{ .Values.be.env }}
     server: https://kubernetes.default.svc
-  project: fect
+  project: fect-{{ .Values.be.env }}
   source:
     path: apps/be
     repoURL: https://github.com/shellshock1953/infra-fect-2024
@@ -27,7 +27,7 @@ spec:
   destination:
     namespace: fect-{{ .Values.fe.env }}
     server: https://kubernetes.default.svc
-  project: fect
+  project: fect-{{ .Values.be.env }}
   source:
     path: apps/fe
     repoURL: https://github.com/shellshock1953/infra-fect-2024
