@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Values.name }}-{{ .Valuses.sysenv }}
+  name: {{ .Values.name }}-{{ .Values.sysenv }}
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     kubernetes.io/tls-acme: "true"
