@@ -1,0 +1,11 @@
+name: fect-be
+replicas: 1
+  
+image:
+  repo: nginx
+  tag: latest
+
+ingress:
+  host: stage.fect.dnull.systems
+  path: /api
+  port: 80
