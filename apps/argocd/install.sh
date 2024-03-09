@@ -9,4 +9,4 @@ fi
 echo "Installing fect-${SYSENV}"
 sleep 4
 
-helm upgrade --install "fect-${SYSENV}" ./ --values "${SYSENV}".yaml
+helm upgrade --install "fect-${SYSENV}" ./ --values "${SYSENV}".yaml --namespace argocd
