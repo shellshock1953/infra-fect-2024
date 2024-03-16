@@ -20,3 +20,6 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: {{ .Values.ingress.port }}
+        envFrom:
+        - secretRef:
+            name: {{ .Values.name }}
