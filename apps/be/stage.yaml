@@ -6,6 +6,6 @@ image:
   tag: 0.0.3
 
 ingress:
-  host: appelsin.stage.dnull.systems
-  path: /api
+  host: api.appelsin.stage.dnull.systems
+  path: /
   port: 8000
