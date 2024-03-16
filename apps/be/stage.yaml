@@ -3,7 +3,7 @@ replicas: 1
   
 image:
   repo: 2xnone/appelsin-be
-  tag: 0.0.1
+  tag: 0.0.3
 
 ingress:
   host: stage.appelsin.dnull.systems

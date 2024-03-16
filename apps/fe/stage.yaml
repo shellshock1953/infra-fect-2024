@@ -3,7 +3,7 @@ replicas: 1
   
 image:
   repo: 2xnone/appelsin-fe
-  tag: 0.0.1
+  tag: 0.0.3
 
 ingress:
   host: appelsin.dnull.systems
