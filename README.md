@@ -1,4 +1,5 @@
 # Infra Repo SoftServe FNEC-2024
+![prod](https://uptime.dnull.systems/api/badge/13/status?style=for-the-badge) ![stage](https://uptime.dnull.systems/api/badge/15/status?style=for-the-badge)
 
 ## Install
 Gitops included. Managed by ArgoCD.
