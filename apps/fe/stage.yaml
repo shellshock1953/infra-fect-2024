@@ -2,10 +2,10 @@ name: fect-fe
 replicas: 1
   
 image:
-  repo: nginx
-  tag: latest
+  repo: 2xnone/appelsin-fe
+  tag: 0.0.1
 
 ingress:
-  host: stage.fect.dnull.systems
+  host: appelsin.dnull.systems
   path: /
   port: 80
