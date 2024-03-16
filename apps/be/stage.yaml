@@ -9,3 +9,8 @@ ingress:
   host: api.appelsin.stage.dnull.systems
   path: /
   port: 8000
+
+secrets:
+  - secretKey: SECRET_KEY
+    remoteRef:
+      key: /app/appelsin/stage/be/SECRET_KEY
