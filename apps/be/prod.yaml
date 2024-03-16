@@ -6,6 +6,6 @@ image:
   tag: latest
 
 ingress:
-  host: appelsin.dnull.systems
+  host: api.appelsin.dnull.systems
   path: /api
   port: 80
