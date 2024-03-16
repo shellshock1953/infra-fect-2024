@@ -3,9 +3,9 @@ replicas: 1
   
 image:
   repo: 2xnone/appelsin-be
-  tag: latest
+  tag: 0.0.1
 
 ingress:
   host: stage.appelsin.dnull.systems
   path: /api
-  port: 80
+  port: 8000
