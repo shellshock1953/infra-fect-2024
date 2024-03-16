@@ -3,7 +3,8 @@
 
 
 ![stage](https://uptime.dnull.systems/api/badge/15/status?style=for-the-badge&label=stage)
-![BE](https://argocd.dnull.systems/api/badge?name=fect-be-stage)
+
+![BE](https://argocd.dnull.systems/api/badge?name=fect-be-stage&label=be)
 
 ## Install
 Gitops included. Managed by ArgoCD.
