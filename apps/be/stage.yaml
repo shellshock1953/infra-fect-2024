@@ -1,15 +1,12 @@
 name: fect-be
 replicas: 1
-  
 image:
   repo: 2xnone/appelsin-be
-  tag: 0.0.3
-
+  tag: x
 ingress:
   host: api.appelsin.stage.dnull.systems
   path: /
   port: 8000
-
 secrets:
   - secretKey: SECRET_KEY_PROJECT
     remoteRef:
