@@ -1,0 +1,57 @@
+---
+# Info on GitHub Webhook: https://developer.github.com/v3/repos/hooks/#create-a-hook
+apiVersion: argoproj.io/v1alpha1
+kind: EventSource
+metadata:
+  name: github
+spec:
+  service:
+    ports:
+      - name: github
+        port: 12000
+        targetPort: 12000
+  github:
+    all-events:
+      organizations:
+        - softserve-appelsin
+      webhook:
+        endpoint: /
+        port: "12000"
+        method: POST
+        url: https://hook.appelsin.dnull.systems
+      webhookSecret:
+        name: github-access
+        key: secret
+      apiToken:
+        name: github-access
+        key: token
+      events:
+        - "*"
+      insecure: false
+      active: true
+      contentType: json
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: github-webhook
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/tls-acme: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: hook.appelsin.dnull.systems
+    http:
+      paths:
+      - backend:
+          service:
+            name: github-eventsource-svc
+            port:
+              number: 12000
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - hook.appelsin.dnull.systems
+    secretName: hook.appelsin.dnull.systems

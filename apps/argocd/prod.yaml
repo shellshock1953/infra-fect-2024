@@ -8,3 +8,9 @@ fe:
   branch: main
   values:
     - prod.yaml
+
+infra:
+  env: prod
+  branch: main
+  values:
+    - prod.yaml

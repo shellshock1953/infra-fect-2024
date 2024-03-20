@@ -1,3 +1,4 @@
+{{ if .Values.be }}
 # BACKEND
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -11,7 +12,7 @@ spec:
   project: fect-{{ .Values.be.env }}
   source:
     path: apps/be
-    repoURL: https://github.com/shellshock1953/infra-fect-2024
+    repoURL: https://github.com/softserve-appelsin/infra
     targetRevision: {{ .Values.be.branch }}
     helm:
       valueFiles:
@@ -20,6 +21,8 @@ spec:
     syncOptions:
       - CreateNamespace=true
 ---
+{{ end }}
+{{ if .Values.fe }}
 # FRONTEND
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -30,10 +33,10 @@ spec:
   destination:
     namespace: fect-{{ .Values.fe.env }}
     server: https://kubernetes.default.svc
-  project: fect-{{ .Values.be.env }}
+  project: fect-{{ .Values.fe.env }}
   source:
     path: apps/fe
-    repoURL: https://github.com/shellshock1953/infra-fect-2024
+    repoURL: https://github.com/softserve-appelsin/infra
     targetRevision: {{ .Values.fe.branch }}
     helm:
       valueFiles:
@@ -41,3 +44,29 @@ spec:
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
+---
+{{ end }}
+{{ if .Values.infra }}
+# INFRA
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: infra
+  namespace: argocd
+spec:
+  destination:
+    namespace: fect-{{ .Values.infra.env }}
+    server: https://kubernetes.default.svc
+  project: fect-{{ .Values.infra.env }}
+  source:
+    path: apps/infra
+    repoURL: https://github.com/softserve-appelsin/infra
+    targetRevision: {{ .Values.infra.branch }}
+    helm:
+      valueFiles:
+        {{- toYaml .Values.infra.values | nindent 8 }}
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+---
+{{ end }}
