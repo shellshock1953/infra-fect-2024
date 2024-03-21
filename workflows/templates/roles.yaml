@@ -18,6 +18,12 @@ rules:
       - workflowtemplates
       - cronworkflows
       - clusterworkflowtemplates
+  - apiGroups:
+      - ""
+    verbs:
+      - patch
+    resources:
+      - pods
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
