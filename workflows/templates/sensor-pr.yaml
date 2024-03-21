@@ -32,6 +32,10 @@ spec:
             type: string
             value:
               - main
+          - path: body.repository.name
+            type: string
+            value:
+              - infra
   triggers:
     - template:
         name: github-workflow-trigger
