@@ -1,9 +1,9 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json
----
+{{ range $manual := .Values.manual }}
+# {{ $manual.name | title }}
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: appelsin-fe
+  name: appelsin-{{ $manual.name }}
 spec:
   serviceAccountName: appelsin-workflow-sa
   entrypoint: main
@@ -41,15 +41,15 @@ spec:
         arguments:
           parameters:
           - name: repo
-            value: "https://github.com/softserve-appelsin/fe"
+            value: "https://github.com/softserve-appelsin/{{ $manual.name }}"
           - name: revision
             value: '{{`{{inputs.parameters.sysenv}}`}}'
           - name: image
-            value: 2xnone/appelsin-fe
+            value: 2xnone/appelsin-{{ $manual.name }}
           - name: tag
             value: '{{`{{inputs.parameters.version}}`}}'
           - name: dockerfile
-            value: Dockerfile.deploy
+            value: {{ $manual.dockerfile }}
       - name: deploy
         depends: build-image
         templateRef:
@@ -62,7 +62,7 @@ spec:
           - name: revision
             value: main
           - name: manifest 
-            value: apps/fe/{{`{{inputs.parameters.sysenv}}`}}.yaml
+            value: apps/{{ $manual.name }}/{{`{{inputs.parameters.sysenv}}`}}.yaml
           - name: yaml_path
             value: image.tag
           - name: tag
@@ -81,6 +81,8 @@ spec:
           - name: status
             value: '{{`{{workflow.status}}`}}'
           - name: success
-            value: "BE: Build completed"
+            value: "{{ $manual.name }}: Build completed"
           - name: fail
-            value: "BE: Build failed"
+            value: "{{ $manual.name }}: Build failed"
+---
+{{ end }}

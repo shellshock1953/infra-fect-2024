@@ -1,0 +1,6 @@
+manual:
+  - name: be
+    dockerfile: Dockerfile
+  - name: fe
+    dockerfile: Dockerfile.deploy
+
