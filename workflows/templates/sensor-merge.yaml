@@ -58,8 +58,7 @@ spec:
                     - name: repo-name   # 1
                     - name: repo-url    # 2
                     - name: repo-ssh    # 3
-                    - name: pr-number   # 4
-                    - name: sha         # 5
+                    - name: sha         # 4
                 templates:
                   - name: main
                     inputs:
@@ -68,7 +67,6 @@ spec:
                         - name: repo-owner
                         - name: repo-url
                         - name: repo-ssh
-                        - name: pr-number
                         - name: sha
                     dag:
                       tasks:
@@ -128,7 +126,7 @@ spec:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
                 dependencyName: merge
-                dataTemplate: "{{`{{ .Input.body.repository.owner.login }}`}}-{{`{{ .Input.body.repository.name }}`}}-pr-{{`{{ .Input.body.pull_request.number }}`}}-{{`{{ .Input.body.pull_request.head.sha | substr 0 7 }}`}}"
+                dataTemplate: "{{`{{ .Input.body.repository.owner.login }}`}}-{{`{{ .Input.body.repository.name }}`}}-push-main-{{`{{ .Input.body.pull_request.head.sha | substr 0 7 }}`}}"
               dest: metadata.name
               operation: append
             # repo owner
@@ -151,17 +149,12 @@ spec:
                 dependencyName: merge
                 dataTemplate: "git@github.com:{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}"
               dest: spec.arguments.parameters.3.value
-            # pr number
-            - src:
-                dependencyName: merge
-                dataKey: body.pull_request.number
-              dest: spec.arguments.parameters.4.value
             # sha
             - src:
                 dependencyName: merge
                 # dataTemplate: "{{`{{ .Input.body.pull_request.head.sha | substr 0 7 }}`}}"
-                dataTemplate: "{{`{{ .Input.body.pull_request.head.sha }}`}}"
-              dest: spec.arguments.parameters.5.value
+                dataTemplate: "{{`{{ .Input.body.commits.id }}`}}"
+              dest: spec.arguments.parameters.4.value
 
       retryStrategy:
         steps: 3
