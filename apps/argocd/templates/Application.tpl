@@ -51,7 +51,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: infra
+  name: fect-workflows-{{ .Values.workflows.env }}
   namespace: argocd
 spec:
   destination:
@@ -59,7 +59,7 @@ spec:
     server: https://kubernetes.default.svc
   project: fect-{{ .Values.workflows.env }}
   source:
-    path: apps/workflows
+    path: workflows
     repoURL: https://github.com/softserve-appelsin/infra
     targetRevision: {{ .Values.workflows.branch }}
     helm:
