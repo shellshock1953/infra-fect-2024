@@ -43,11 +43,11 @@ spec:
           - name: repo
             value: "https://github.com/Dzheerro/softserve-project-frontend"
           - name: revision
-            value: '{{inputs.parameters.sysenv}}'
+            value: '{{`{{inputs.parameters.sysenv}}`}}'
           - name: image
             value: 2xnone/appelsin-fe
           - name: tag
-            value: '{{inputs.parameters.version}}'
+            value: '{{`{{inputs.parameters.version}}`}}'
           - name: dockerfile
             value: Dockerfile.deploy
       - name: deploy
@@ -62,11 +62,11 @@ spec:
           - name: revision
             value: main
           - name: manifest 
-            value: apps/fe/{{inputs.parameters.sysenv}}.yaml
+            value: apps/fe/{{`{{inputs.parameters.sysenv}}`}}.yaml
           - name: yaml_path
             value: image.tag
           - name: tag
-            value: '{{inputs.parameters.version}}'
+            value: '{{`{{inputs.parameters.version}}`}}'
   - name: notify
     dag:
       tasks:
@@ -79,7 +79,7 @@ spec:
           - name: channel
             value: appelsin
           - name: status
-            value: '{{workflow.status}}'
+            value: '{{`{{workflow.status}}`}}'
           - name: success
             value: "BE: Build completed"
           - name: fail
