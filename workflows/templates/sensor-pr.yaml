@@ -75,16 +75,16 @@ spec:
                           - name: description 
                             value: testing params
                           - name: repo
-                            value: '{{inputs.parameters.repo-owner}}/{{inputs.parameters.repo-name}}'
+                            value: '{{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}}'
                           - name: sha
-                            value: '{{inputs.parameters.sha}}'
+                            value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
                             value: pending
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
                 dependencyName: pr-run
-                dataTemplate: "{{ .Input.body.repository.owner.login }}-{{ .Input.body.repository.name }}-pr-{{ .Input.body.pull_request.number }}-{{ .Input.body.pull_request.head.sha | substr 0 7 }}"
+                dataTemplate: "{{`{{ .Input.body.repository.owner.login }}`}}-{{`{{ .Input.body.repository.name }}`}}-pr-{{`{{ .Input.body.pull_request.number }}`}}-{{`{{ .Input.body.pull_request.head.sha | substr 0 7 }}`}}"
               dest: metadata.name
               operation: append
             # pr title
@@ -100,8 +100,8 @@ spec:
             # sha
             - src:
                 dependencyName: pr-run
-                # dataTemplate: "{{ .Input.body.pull_request.head.sha | substr 0 7 }}"
-                dataTemplate: "{{ .Input.body.pull_request.head.sha }}"
+                # dataTemplate: "{{`{{ .Input.body.pull_request.head.sha | substr 0 7 }}`}}"
+                dataTemplate: "{{`{{ .Input.body.pull_request.head.sha }}`}}"
               dest: spec.arguments.parameters.2.value
             # repo name
             - src:

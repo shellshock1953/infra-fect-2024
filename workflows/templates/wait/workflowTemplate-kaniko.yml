@@ -34,8 +34,8 @@ spec:
       - name: private-source
         path: /src
         git:
-          repo: '{{inputs.parameters.repo}}'
-          revision: '{{inputs.parameters.revision}}'
+          repo: '{{`{{inputs.parameters.repo}}'
+          revision: '{{`{{inputs.parameters.revision}}'
           # sshPrivateKeySecret:
             # name: deployment-key
             # key: ssh-privatekey
@@ -46,8 +46,8 @@ spec:
       - /kaniko/executor
       args:
       - --context=/src
-      - --destination={{inputs.parameters.image}}:{{inputs.parameters.tag}}
-      - --dockerfile={{inputs.parameters.dockerfile}}
+      - --destination={{`{{inputs.parameters.image}}:{{`{{inputs.parameters.tag}}
+      - --dockerfile={{`{{inputs.parameters.dockerfile}}
       volumeMounts:
       - name: docker-config
         mountPath: /kaniko/.docker
