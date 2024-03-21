@@ -142,7 +142,7 @@ spec:
             # repo url
             - src:
                 dependencyName: merge
-                dataTemplate: "http://github.com/{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}"
+                dataTemplate: "https://github.com/{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}"
               dest: spec.arguments.parameters.2.value
             # repo ssh
             - src:
