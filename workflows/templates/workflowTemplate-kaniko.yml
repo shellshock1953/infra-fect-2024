@@ -12,11 +12,8 @@ spec:
     - name: revision
     - name: image
     - name: tag
-      default: latest
     - name: dockerfile
-      default: Dockerfile
     - name: context
-      default: .
   volumes:
   - name: docker-config
     secret:
@@ -33,8 +30,11 @@ spec:
         - name: revision
         - name: image
         - name: tag
+          default: latest
         - name: dockerfile
+          default: Dockerfile
         - name: context
+          default: .
       artifacts:
       - name: private-source
         path: /src
