@@ -6,6 +6,7 @@ metadata:
   name: appelsin-{{ $app.name }}-manual
 spec:
   serviceAccountName: appelsin-workflow-sa
+  archiveLogs: true
   entrypoint: main
   arguments:
     parameters:
