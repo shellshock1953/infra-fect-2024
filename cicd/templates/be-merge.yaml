@@ -103,6 +103,8 @@ spec:
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: image
                             value: 2xnone/appelsin-be
+                          - name: tag
+                            value: '{{`{{inputs.parameters.sha | substr 0 7 }}`}}'
 
                       - name: deploy
                         depends: build-image
@@ -112,15 +114,15 @@ spec:
                         arguments:
                           parameters:
                           - name: repo
-                            value: "{{`{{inputs.parameters.repo-ssh}}`}}"
+                            value: git@github.com:softserve-appelsin/infra.git
                           - name: revision
-                            value: '{{`{{inputs.parameters.sha}}`}}'
+                            value: main
                           - name: manifest 
                             value: apps/be/{{`{{inputs.parameters.branch}}`}}.yaml
                           - name: yaml_path
                             value: image.tag
                           - name: tag
-                            value: '{{`{{inputs.parameters.sha}}`}}'
+                            value: '{{`{{inputs.parameters.sha | substr 0 7 }}`}}'
 
                       - name: status-success
                         depends: deploy
