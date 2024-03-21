@@ -48,13 +48,13 @@ spec:
                 volumes:
                 - name: docker-config
                   secret:
-                    secretName: image-push
+                    secretName: docker-config
                     items:
                     - key: .dockerconfigjson
                       path: config.json
                 - name: push-key
                   secret:
-                    secretName: infra-deploy
+                    secretName: deployment-key
                     items:
                       - key: ssh-privatekey
                         path: infra
