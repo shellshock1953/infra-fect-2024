@@ -103,7 +103,7 @@ spec:
                         arguments:
                           parameters:
                           - name: repo
-                            value: "{{`{{inputs.parameters.repo-ssh}}`}}"
+                            value: "{{`{{inputs.parameters.repo-url}}`}}"
                           - name: revision
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: image
