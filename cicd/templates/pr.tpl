@@ -1,9 +1,9 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/argoproj/argo-events/master/api/jsonschema/schema.json
----
+{{ $app := .Values.apps }}
+# {{ $app.name | upper }}
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: appelsin-be-pr
+  name: appelsin-{{ $app.name }}-pr
 spec:
   template:
     serviceAccountName: appelsin-workflow-sa
@@ -37,7 +37,7 @@ spec:
           - path: body.repository.name
             type: string
             value:
-              - be
+              - {{ $app.name }}
   triggers:
     - template:
         name: github-workflow-trigger
@@ -114,7 +114,9 @@ spec:
                           - name: revision
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: image
-                            value: 2xnone/appelsin-be
+                            value: 2xnone/appelsin-{{ $app.name }}
+                          - name: dockerfile
+                            value: {{ $app.dockerfile }}
 
                       - name: status-success
                         depends: build-image
@@ -147,9 +149,9 @@ spec:
                           - name: status
                             value: '{{`{{workflow.status}}`}}'
                           - name: success
-                            value: "BE: Build completed"
+                            value: "{{ $app.name }}: Build completed"
                           - name: fail
-                            value: "BE: Build failed"
+                            value: "{{ $app.name }}: Build failed"
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
@@ -191,3 +193,4 @@ spec:
 
       retryStrategy:
         steps: 3
+{{ end }}

@@ -1,4 +1,4 @@
-manual:
+apps:
   - name: be
     dockerfile: Dockerfile
   - name: fe

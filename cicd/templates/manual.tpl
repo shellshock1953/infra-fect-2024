@@ -1,9 +1,9 @@
-{{ range $manual := .Values.manual }}
-# {{ $manual.name | title }}
+{{ range $app := .Values.apps }}
+# {{ $app.name | upper }}
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: appelsin-{{ $manual.name }}
+  name: appelsin-{{ $app.name }}
 spec:
   serviceAccountName: appelsin-workflow-sa
   entrypoint: main
@@ -41,15 +41,15 @@ spec:
         arguments:
           parameters:
           - name: repo
-            value: "https://github.com/softserve-appelsin/{{ $manual.name }}"
+            value: "https://github.com/softserve-appelsin/{{ $app.name }}"
           - name: revision
             value: '{{`{{inputs.parameters.sysenv}}`}}'
           - name: image
-            value: 2xnone/appelsin-{{ $manual.name }}
+            value: 2xnone/appelsin-{{ $app.name }}
           - name: tag
             value: '{{`{{inputs.parameters.version}}`}}'
           - name: dockerfile
-            value: {{ $manual.dockerfile }}
+            value: {{ $app.dockerfile }}
       - name: deploy
         depends: build-image
         templateRef:
@@ -62,7 +62,7 @@ spec:
           - name: revision
             value: main
           - name: manifest 
-            value: apps/{{ $manual.name }}/{{`{{inputs.parameters.sysenv}}`}}.yaml
+            value: apps/{{ $app.name }}/{{`{{inputs.parameters.sysenv}}`}}.yaml
           - name: yaml_path
             value: image.tag
           - name: tag
@@ -81,8 +81,8 @@ spec:
           - name: status
             value: '{{`{{workflow.status}}`}}'
           - name: success
-            value: "{{ $manual.name }}: Build completed"
+            value: "{{ $app.name }}: Build completed"
           - name: fail
-            value: "{{ $manual.name }}: Build failed"
+            value: "{{ $app.name }}: Build failed"
 ---
 {{ end }}
