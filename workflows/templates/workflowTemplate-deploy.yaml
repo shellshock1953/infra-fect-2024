@@ -30,15 +30,6 @@ spec:
         - name: manifest
         - name: yaml_path
         - name: tag
-      # artifacts:
-      # - name: private-source
-      #   path: /src
-      #   git:
-      #     repo: '{{inputs.parameters.repo}}'
-      #     revision: '{{inputs.parameters.revision}}'
-      #     sshPrivateKeySecret:
-      #       name: infra-deploy
-      #       key: ssh-privatekey
     container:
       workingDir: /app/clone
       name: deployer
