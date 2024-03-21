@@ -47,11 +47,12 @@ spec:
                 entrypoint: main
                 arguments:
                   parameters:
-                    - name: pr-title    # 0
-                    - name: pr-number   # 1
-                    - name: sha         # 2
-                    - name: repo-name   # 3
-                    - name: repo-owner  # 4
+                    - name: repo-name   # 0
+                    - name: repo-owner  # 1
+                    - name: repo-url    # 2
+                    - name: repo-ssh    # 3
+                    - name: sha         # 4
+                    - name: pr-number   # 5
                 templates:
                   - name: main
                     inputs:
@@ -79,6 +80,38 @@ spec:
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
                             value: pending
+
+                      - name: build-image
+                        depends: status-pending
+                        templateRef:
+                          name: kaniko
+                          template: main
+                        arguments:
+                          parameters:
+                          - name: repo
+                            value: "{{`{{inputs.parameters.repo-ssh}}`}}"
+                          - name: revision
+                            value: '{{`{{inputs.parameters.sha}}`}}'
+                          - name: image
+                            value: 2xnone/appelsin-infra
+
+                      - name: status-pending
+                        depends: status-success
+                        templateRef:
+                          name: github-status
+                          template: main
+                        arguments:
+                          parameters:
+                          - name: name 
+                            value: argo-events
+                          - name: description 
+                            value: testing params
+                          - name: repo
+                            value: '{{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}}'
+                          - name: sha
+                            value: '{{`{{inputs.parameters.sha}}`}}'
+                          - name: status
+                            value: success
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
@@ -86,31 +119,37 @@ spec:
                 dataTemplate: "{{`{{ .Input.body.repository.owner.login }}`}}-{{`{{ .Input.body.repository.name }}`}}-pr-{{`{{ .Input.body.pull_request.number }}`}}-{{`{{ .Input.body.pull_request.head.sha | substr 0 7 }}`}}"
               dest: metadata.name
               operation: append
-            # pr title
+            # repo owner
             - src:
                 dependencyName: pr-run
-                dataKey: body.pull_request.title
+                dataKey: body.repository.owner.login
               dest: spec.arguments.parameters.0.value
+            # repo name
+            - src:
+                dependencyName: pr-run
+                dataKey: body.repository.name
+              dest: spec.arguments.parameters.1.value
+            # repo url
+            - src:
+                dependencyName: pr-run
+                dataTemplate: "http://github.com/{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}.git"
+              dest: spec.arguments.parameters.2.value
+            # repo ssh
+            - src:
+                dependencyName: pr-run
+                dataTemplate: "git@github.com:{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}.git"
+              dest: spec.arguments.parameters.3.value
             # pr number
             - src:
                 dependencyName: pr-run
                 dataKey: body.pull_request.number
-              dest: spec.arguments.parameters.1.value
+              dest: spec.arguments.parameters.4.value
             # sha
             - src:
                 dependencyName: pr-run
                 # dataTemplate: "{{`{{ .Input.body.pull_request.head.sha | substr 0 7 }}`}}"
                 dataTemplate: "{{`{{ .Input.body.pull_request.head.sha }}`}}"
-              dest: spec.arguments.parameters.2.value
-            # repo name
-            - src:
-                dependencyName: pr-run
-                dataKey: body.repository.name
-              dest: spec.arguments.parameters.3.value
-            # repo owner
-            - src:
-                dependencyName: pr-run
-                dataKey: body.repository.owner.login
-              dest: spec.arguments.parameters.4.value
+              dest: spec.arguments.parameters.5.value
+
       retryStrategy:
         steps: 3
