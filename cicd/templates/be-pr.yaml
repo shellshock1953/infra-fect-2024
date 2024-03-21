@@ -133,6 +133,23 @@ spec:
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
                             value: success
+                  - name: notify
+                    dag:
+                      tasks:
+                      - name: ntfy
+                        templateRef:
+                          name: ntfy
+                          template: main
+                        arguments:
+                          parameters:
+                          - name: channel
+                            value: appelsin
+                          - name: status
+                            value: '{{`{{workflow.status}}`}}'
+                          - name: success
+                            value: "BE: Build completed"
+                          - name: fail
+                            value: "BE: Build failed"
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
