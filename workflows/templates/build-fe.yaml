@@ -16,7 +16,7 @@ spec:
   volumes:
   - name: docker-config
     secret:
-      secretName: image-push
+      secretName: docker-config
       items:
       - key: .dockerconfigjson
         path: config.json
