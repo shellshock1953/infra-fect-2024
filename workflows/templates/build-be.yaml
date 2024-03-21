@@ -5,7 +5,7 @@ kind: WorkflowTemplate
 metadata:
   name: appelsin-be
 spec:
-  serviceAccountName: argo-workflows-admin
+  serviceAccountName: appelsin-workflow-sa
   entrypoint: main
   arguments:
     parameters:
