@@ -5,7 +5,7 @@ metadata:
   name: github
 spec:
   template:
-    serviceAccountName: operate-workflow-sa
+    serviceAccountName: appelsin-workflow-sa
   dependencies:
     - name: pr-run
       eventSourceName: github
