@@ -1,4 +1,4 @@
-{{ $app := .Values.apps }}
+{{ range $app := .Values.apps }}
 # {{ $app.name | upper }}
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
