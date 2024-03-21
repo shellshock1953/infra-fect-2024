@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  name: appelsin-{{ $app.name }}
+  name: appelsin-{{ $app.name }}-manual
 spec:
   serviceAccountName: appelsin-workflow-sa
   entrypoint: main
