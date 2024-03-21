@@ -1,5 +1,5 @@
 {{ range $app := .Values.apps }}
-# {{ $app.name | upper }}
+# MANUAL: {{ $app.name | upper }}
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
