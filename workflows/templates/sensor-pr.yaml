@@ -57,11 +57,12 @@ spec:
                   - name: main
                     inputs:
                       parameters:
-                        - name: pr-title    
-                        - name: pr-number   
-                        - name: sha         
-                        - name: repo-name   
-                        - name: repo-owner  
+                        - name: repo-name
+                        - name: repo-owner
+                        - name: repo-url
+                        - name: repo-ssh
+                        - name: sha
+                        - name: pr-number
                     dag:
                       tasks:
                       - name: status-pending
