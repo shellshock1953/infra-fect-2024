@@ -1,0 +1,9 @@
+infra:
+  env: infra
+  branch: main
+  values:
+    - prod.yaml
+  projects:
+    - stage
+    - prod
+    - infra
