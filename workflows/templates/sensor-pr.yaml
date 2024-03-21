@@ -96,8 +96,8 @@ spec:
                           - name: image
                             value: 2xnone/appelsin-infra
 
-                      - name: status-pending
-                        depends: status-success
+                      - name: status-success
+                        depends: build-image
                         templateRef:
                           name: github-status
                           template: main
