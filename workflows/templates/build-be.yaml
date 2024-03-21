@@ -41,7 +41,7 @@ spec:
         arguments:
           parameters:
           - name: repo
-            value: "https://github.com/zhymas/soft-serve-project-backend"
+            value: "https://github.com/softserve-appelsin/be"
           - name: revision
             value: '{{`{{inputs.parameters.sysenv}}`}}'
           - name: image
@@ -58,7 +58,7 @@ spec:
         arguments:
           parameters:
           - name: repo
-            value: "git@github.com:shellshock1953/infra-fect-2024.git"
+            value: "git@github.com:softserve-appelsin/infra.git"
           - name: revision
             value: main
           - name: manifest 
