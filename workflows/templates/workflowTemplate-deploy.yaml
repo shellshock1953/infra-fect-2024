@@ -33,7 +33,7 @@ spec:
     container:
       workingDir: /app/clone
       name: deployer
-      image: 2xnone/deployer:sha-c7a25c4
+      image: 2xnone/deployer:sha-f88e0c4
       env:
         # - name: WORKDIR
         #   value: /src
