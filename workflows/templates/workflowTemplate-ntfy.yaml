@@ -1,0 +1,62 @@
+
+# yaml-language-server: $schema=https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json
+---
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: ntfy
+spec:
+  entrypoint: main
+  arguments:
+    parameters:
+    - name: status
+    - name: channel
+    - name: success
+    - name: fail
+  templates:
+  - name: main
+    inputs:
+      parameters:
+      - name: status
+      - name: channel
+      - name: success
+      - name: fail
+    dag:
+      tasks:
+      - name: success
+        when: "'{{`{{inputs.parameters.status}}`}}' == 'Succeeded'"
+        inputs:
+          parameters:
+          - name: status
+        template: ntfy
+        arguments:
+          parameters:
+          - name: channel
+            value: "{{`{{inputs.parameters.channel}}`}}"
+          - name: message
+            value: "{{`{{inputs.parameters.success}}`}}"
+      - name: fail
+        when: "'{{`{{inputs.parameters.status}}' != 'Succeeded'"
+        inputs:
+          parameters:
+          - name: status
+        template: ntfy
+        arguments:
+          parameters:
+          - name: channel
+            value: "{{`{{inputs.parameters.channel}}`}}"
+          - name: message
+            value: "{{`{{inputs.parameters.fail}}`}}"
+  - name: ntfy
+    inputs:
+      parameters:
+      - name: channel
+      - name: message
+    container:
+      image: quay.io/curl/curl:latest
+      command:
+      - curl
+      args:
+      - -d
+      - "'{{`{{inputs.parameters.message}}`}}'"
+      - ntfy.sh/{{`{{inputs.parameters.channel}}`}}
