@@ -67,7 +67,6 @@ spec:
                         templateRef:
                           name: github-status
                           template: main
-                          clusterScope: true
                         arguments:
                           parameters:
                           - name: name 
