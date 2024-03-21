@@ -53,16 +53,16 @@ spec:
           value: "dnull-bot"
         - name: "GIT_EMAIL"
           value: "shellshock.dnull+bot@gmail.com"
-      command:
-      - sleep
-      args:
-      - '3600'
       # command:
-      # - /app/deployer
+      # - sleep
       # args:
-      # - -f {{`{{inputs.parameters.manifest}}`}}
-      # - -k {{`{{inputs.parameters.yaml_path}}`}}
-      # - -v {{`{{inputs.parameters.tag}}`}}
+      # - '3600'
+      command:
+      - /app/deployer
+      args:
+      - -f {{`{{inputs.parameters.manifest}}`}}
+      - -k {{`{{inputs.parameters.yaml_path}}`}}
+      - -v {{`{{inputs.parameters.tag}}`}}
       volumeMounts:
       - name: push-key
         mountPath: /ssh/
