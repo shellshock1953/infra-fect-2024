@@ -2,7 +2,7 @@
 SYSENV="${1}"
 
 if [ -z "${SYSENV}" ]; then
-  echo "Please provide the SYSENV name: stage/prod"
+  echo "Please provide the SYSENV name: stage/prod/infra"
   exit 1
 fi
 
