@@ -12,7 +12,11 @@ spec:
     - name: revision
     - name: image
     - name: tag
+      default: latest
     - name: dockerfile
+      default: Dockerfile
+    - name: context
+      default: .
   volumes:
   - name: docker-config
     secret:
@@ -30,6 +34,7 @@ spec:
         - name: image
         - name: tag
         - name: dockerfile
+        - name: context
       artifacts:
       - name: private-source
         path: /src
@@ -45,7 +50,7 @@ spec:
       command:
       - /kaniko/executor
       args:
-      - --context=/src
+      - --context=/src/{{`{{inputs.parameters.context}}`}}
       - --destination={{`{{inputs.parameters.image}}`}}:{{`{{inputs.parameters.tag}}`}}
       - --dockerfile={{`{{inputs.parameters.dockerfile}}`}}
       volumeMounts:
