@@ -1,43 +1,32 @@
 {{ range $app := .Values.apps }}
-# PR: {{ $app.name | upper }}
+# MERGE: {{ $app.name | upper }}
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: appelsin-{{ $app.name }}-pr
+  name: appelsin-{{ $app.name }}-merge
 spec:
   template:
     serviceAccountName: appelsin-workflow-sa
   dependencies:
-    - name: pr
+    - name: merge
       eventSourceName: github
       eventName: all-events
       filters:
         data:
-          # https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads
           - path: headers.X-Github-Event
             type: string
             value:
-              - pull_request
-          - path: body.action
+              - push
+          - path: body.ref
             type: string
             value:
-              - opened
-              - edited
-              - reopened
-              - synchronize
-          - path: body.pull_request.state
-            type: string
-            value:
-              - open
-          - path: body.pull_request.base.ref
-            type: string
-            value:
-              - main
-              - stage
+              - refs/heads/main
+              - refs/heads/stage
           - path: body.repository.name
             type: string
             value:
               - {{ $app.name }}
+
   triggers:
     - template:
         name: github-workflow-trigger
@@ -51,7 +40,6 @@ spec:
                 generateName: github-
               spec:
                 entrypoint: main
-                onExit: notify
                 volumes:
                 - name: docker-config
                   secret:
@@ -71,8 +59,9 @@ spec:
                     - name: repo-name   # 1
                     - name: repo-url    # 2
                     - name: repo-ssh    # 3
-                    - name: pr-number   # 4
+                    - name: branch      # 4
                     - name: sha         # 5
+                    - name: short-sha   # 6
                 templates:
                   - name: main
                     inputs:
@@ -81,8 +70,9 @@ spec:
                         - name: repo-owner
                         - name: repo-url
                         - name: repo-ssh
-                        - name: pr-number
+                        - name: branch
                         - name: sha
+                        - name: short-sha
                     dag:
                       tasks:
                       - name: status-pending
@@ -94,7 +84,7 @@ spec:
                           - name: name 
                             value: argo-events
                           - name: description 
-                            value: Running tests
+                            value: Build and Deploy
                           - name: repo
                             value: '{{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}}'
                           - name: sha
@@ -115,11 +105,31 @@ spec:
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: image
                             value: 2xnone/appelsin-{{ $app.name }}
+                          - name: tag
+                            value: '{{`{{inputs.parameters.short-sha}}`}}'
                           - name: dockerfile
                             value: {{ $app.dockerfile }}
 
-                      - name: status-success
+                      - name: deploy
                         depends: build-image
+                        templateRef:
+                          name: deploy
+                          template: main
+                        arguments:
+                          parameters:
+                          - name: repo
+                            value: git@github.com:softserve-appelsin/infra.git
+                          - name: revision
+                            value: main
+                          - name: manifest 
+                            value: apps/{{ $app.name }}/{{`{{inputs.parameters.branch}}`}}.yaml
+                          - name: yaml_path
+                            value: image.tag
+                          - name: tag
+                            value: '{{`{{inputs.parameters.short-sha}}`}}'
+
+                      - name: status-success
+                        depends: deploy
                         templateRef:
                           name: github-status
                           template: main
@@ -128,13 +138,14 @@ spec:
                           - name: name 
                             value: argo-events
                           - name: description 
-                            value: Tests completed
+                            value: Image deployed
                           - name: repo
                             value: '{{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}}'
                           - name: sha
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
                             value: success
+
                   - name: notify
                     dag:
                       tasks:
@@ -155,41 +166,45 @@ spec:
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
-                dependencyName: pr
-                dataTemplate: "{{`{{ .Input.body.repository.owner.login }}`}}-{{`{{ .Input.body.repository.name }}`}}-pr-{{`{{ .Input.body.pull_request.number }}`}}-{{`{{ .Input.body.pull_request.head.sha | substr 0 7 }}`}}"
+                dependencyName: merge
+                dataTemplate: "{{`{{ .Input.body.repository.owner.login }}`}}-{{`{{ .Input.body.repository.name }}`}}-push-main-{{`{{ .Input.body.after | substr 0 7 }}`}}"
               dest: metadata.name
               operation: append
             # repo owner
             - src:
-                dependencyName: pr
+                dependencyName: merge
                 dataKey: body.repository.owner.login
               dest: spec.arguments.parameters.0.value
             # repo name
             - src:
-                dependencyName: pr
+                dependencyName: merge
                 dataKey: body.repository.name
               dest: spec.arguments.parameters.1.value
             # repo url
             - src:
-                dependencyName: pr
+                dependencyName: merge
                 dataTemplate: "https://github.com/{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}"
               dest: spec.arguments.parameters.2.value
             # repo ssh
             - src:
-                dependencyName: pr
+                dependencyName: merge
                 dataTemplate: "git@github.com:{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}"
               dest: spec.arguments.parameters.3.value
-            # pr number
+            # branch
             - src:
-                dependencyName: pr
-                dataKey: body.pull_request.number
+                dependencyName: merge
+                dataTemplate: '{{`{{ index (splitList "/" .Input.body.ref ) 2 }}`}}'
               dest: spec.arguments.parameters.4.value
             # sha
             - src:
-                dependencyName: pr
-                # dataTemplate: "{{`{{ .Input.body.pull_request.head.sha | substr 0 7 }}`}}"
-                dataTemplate: "{{`{{ .Input.body.pull_request.head.sha }}`}}"
+                dependencyName: merge
+                dataTemplate: "{{`{{ .Input.body.after }}`}}"
               dest: spec.arguments.parameters.5.value
+            # short-sha
+            - src:
+                dependencyName: merge
+                dataTemplate: "{{`{{ .Input.body.after | substr 0 7 }}`}}"
+              dest: spec.arguments.parameters.6.value
 
       retryStrategy:
         steps: 3
