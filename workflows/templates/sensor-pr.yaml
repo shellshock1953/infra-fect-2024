@@ -60,12 +60,12 @@ spec:
                         path: infra
                 arguments:
                   parameters:
-                    - name: repo-name   # 0
-                    - name: repo-owner  # 1
+                    - name: repo-owner  # 0
+                    - name: repo-name   # 1
                     - name: repo-url    # 2
                     - name: repo-ssh    # 3
-                    - name: sha         # 4
-                    - name: pr-number   # 5
+                    - name: pr-number   # 4
+                    - name: sha         # 5
                 templates:
                   - name: main
                     inputs:
@@ -74,8 +74,8 @@ spec:
                         - name: repo-owner
                         - name: repo-url
                         - name: repo-ssh
-                        - name: sha
                         - name: pr-number
+                        - name: sha
                     dag:
                       tasks:
                       - name: status-pending
