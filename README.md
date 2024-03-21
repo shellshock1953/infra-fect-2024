@@ -18,3 +18,8 @@ Hosted on public dockerhub registries:
 
 - [Frontend](https://hub.docker.com/r/2xnone/appelsin-fe)
 - [Backend](https://hub.docker.com/r/2xnone/appelsin-be)
+
+## Events and Workflows
+This repo is using Argo Events + Argo Workflows.
+
+Check [./infra/templates] for EventSources, Sensors and Workflows.

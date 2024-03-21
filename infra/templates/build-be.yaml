@@ -1,0 +1,86 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json
+---
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: appelsin-be
+spec:
+  serviceAccountName: argo-workflows-admin
+  entrypoint: main
+  arguments:
+    parameters:
+      - name: version
+      - name: sysenv
+        enum: ['stage', 'prod']
+  onExit: notify
+  volumes:
+  - name: docker-config
+    secret:
+      secretName: image-push
+      items:
+      - key: .dockerconfigjson
+        path: config.json
+  - name: push-key
+    secret:
+      secretName: infra-deploy
+      items:
+        - key: ssh-privatekey
+          path: infra
+  templates:
+  - name: main
+    inputs:
+      parameters:
+        - name: version
+        - name: sysenv
+    dag:
+      tasks:
+      - name: build-image
+        templateRef:
+          name: kaniko
+          template: main
+        arguments:
+          parameters:
+          - name: repo
+            value: "https://github.com/zhymas/soft-serve-project-backend"
+          - name: revision
+            value: '{{inputs.parameters.sysenv}}'
+          - name: image
+            value: 2xnone/appelsin-be
+          - name: tag
+            value: '{{inputs.parameters.version}}'
+          - name: dockerfile
+            value: Dockerfile
+      - name: deploy
+        depends: build-image
+        templateRef:
+          name: deploy
+          template: main
+        arguments:
+          parameters:
+          - name: repo
+            value: "git@github.com:shellshock1953/infra-fect-2024.git"
+          - name: revision
+            value: main
+          - name: manifest 
+            value: apps/be/{{inputs.parameters.sysenv}}.yaml
+          - name: yaml_path
+            value: image.tag
+          - name: tag
+            value: '{{inputs.parameters.version}}'
+  - name: notify
+    dag:
+      tasks:
+      - name: ntfy
+        templateRef:
+          name: ntfy
+          template: main
+        arguments:
+          parameters:
+          - name: channel
+            value: appelsin
+          - name: status
+            value: '{{workflow.status}}'
+          - name: success
+            value: "BE: Build completed"
+          - name: fail
+            value: "BE: Build failed"

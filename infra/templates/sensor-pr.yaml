@@ -1,0 +1,117 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: github
+spec:
+  template:
+    serviceAccountName: operate-workflow-sa
+  dependencies:
+    - name: pr-run
+      eventSourceName: github
+      eventName: all-events
+      filters:
+        data:
+          # https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads
+          - path: headers.X-Github-Event
+            type: string
+            value:
+              - pull_request
+          - path: body.action
+            type: string
+            value:
+              - opened
+              - edited
+              - reopened
+              - synchronize
+          - path: body.pull_request.state
+            type: string
+            value:
+              - open
+          - path: body.pull_request.base.ref
+            type: string
+            value:
+              - main
+  triggers:
+    - template:
+        name: github-workflow-trigger
+        k8s:
+          operation: create
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+                generateName: github-
+              spec:
+                entrypoint: main
+                arguments:
+                  parameters:
+                    - name: pr-title    # 0
+                    - name: pr-number   # 1
+                    - name: sha         # 2
+                    - name: repo-name   # 3
+                    - name: repo-owner  # 4
+                templates:
+                  - name: main
+                    inputs:
+                      parameters:
+                        - name: pr-title    
+                        - name: pr-number   
+                        - name: sha         
+                        - name: repo-name   
+                        - name: repo-owner  
+                    dag:
+                      tasks:
+                      - name: status-pending
+                        templateRef:
+                          name: github-status
+                          template: main
+                          clusterScope: true
+                        arguments:
+                          parameters:
+                          - name: name 
+                            value: argo-events
+                          - name: description 
+                            value: testing params
+                          - name: repo
+                            value: '{{inputs.parameters.repo-owner}}/{{inputs.parameters.repo-name}}'
+                          - name: sha
+                            value: '{{inputs.parameters.sha}}'
+                          - name: status
+                            value: pending
+          parameters:
+            # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
+            - src:
+                dependencyName: pr-run
+                dataTemplate: "{{ .Input.body.repository.owner.login }}-{{ .Input.body.repository.name }}-pr-{{ .Input.body.pull_request.number }}-{{ .Input.body.pull_request.head.sha | substr 0 7 }}"
+              dest: metadata.name
+              operation: append
+            # pr title
+            - src:
+                dependencyName: pr-run
+                dataKey: body.pull_request.title
+              dest: spec.arguments.parameters.0.value
+            # pr number
+            - src:
+                dependencyName: pr-run
+                dataKey: body.pull_request.number
+              dest: spec.arguments.parameters.1.value
+            # sha
+            - src:
+                dependencyName: pr-run
+                # dataTemplate: "{{ .Input.body.pull_request.head.sha | substr 0 7 }}"
+                dataTemplate: "{{ .Input.body.pull_request.head.sha }}"
+              dest: spec.arguments.parameters.2.value
+            # repo name
+            - src:
+                dependencyName: pr-run
+                dataKey: body.repository.name
+              dest: spec.arguments.parameters.3.value
+            # repo owner
+            - src:
+                dependencyName: pr-run
+                dataKey: body.repository.owner.login
+              dest: spec.arguments.parameters.4.value
+      retryStrategy:
+        steps: 3
