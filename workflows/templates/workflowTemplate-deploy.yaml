@@ -1,0 +1,81 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json
+---
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: deploy
+spec:
+  entrypoint: main
+  arguments:
+    parameters:
+      - name: repo
+      - name: revision
+      - name: manifest
+      - name: yaml_path
+      - name: tag
+  volumes:
+    - name: push-key
+      secret:
+        secretName: deployment-key
+        items:
+          - key: ssh-privatekey
+            path: infra
+
+  templates:
+  - name: main
+    inputs:
+      parameters:
+        - name: repo
+        - name: revision
+        - name: manifest
+        - name: yaml_path
+        - name: tag
+      # artifacts:
+      # - name: private-source
+      #   path: /src
+      #   git:
+      #     repo: '{{inputs.parameters.repo}}'
+      #     revision: '{{inputs.parameters.revision}}'
+      #     sshPrivateKeySecret:
+      #       name: infra-deploy
+      #       key: ssh-privatekey
+    container:
+      workingDir: /app/clone
+      name: deployer
+      image: 2xnone/deployer:sha-c7a25c4
+      env:
+        # - name: WORKDIR
+        #   value: /src
+        - name: DEPLOY_KEY
+          value: /ssh/infra
+        - name: REPO
+          value: '{{`{{inputs.parameters.repo}}`}}'
+        - name: REVISION
+          value: '{{`{{inputs.parameters.revision}}`}}'
+        - name: KEY
+          value: '{{`{{inputs.parameters.yaml_path}}`}}'
+        - name: VALUE
+          value: '{{`{{inputs.parameters.tag}}`}}'
+        - name: FILE
+          value: '{{`{{inputs.parameters.manifest}}`}}'
+        - name: "GIT_USERNAME"
+          value: "dnull-bot"
+        - name: "GIT_EMAIL"
+          value: "shellshock.dnull+bot@gmail.com"
+      # command:
+      # - sleep
+      # args:
+      # - '3600'
+      command:
+      - /app/deployer
+      args:
+      - -f {{`{{inputs.parameters.manifest}}`}}
+      - -k {{`{{inputs.parameters.yaml_path}}`}}
+      - -v {{`{{inputs.parameters.tag}}`}}
+      volumeMounts:
+      - name: push-key
+        mountPath: /ssh/
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 512Mi
