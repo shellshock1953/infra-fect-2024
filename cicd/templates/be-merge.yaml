@@ -103,10 +103,6 @@ spec:
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: image
                             value: 2xnone/appelsin-be
-                          - name: dockerfile
-                            value: dockerfiles/Dockerfile
-                          - name: context
-                            value: .
 
                       - name: deploy
                         depends: build-image
