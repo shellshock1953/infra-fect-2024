@@ -45,6 +45,19 @@ spec:
                 generateName: github-
               spec:
                 entrypoint: main
+                volumes:
+                - name: docker-config
+                  secret:
+                    secretName: image-push
+                    items:
+                    - key: .dockerconfigjson
+                      path: config.json
+                - name: push-key
+                  secret:
+                    secretName: infra-deploy
+                    items:
+                      - key: ssh-privatekey
+                        path: infra
                 arguments:
                   parameters:
                     - name: repo-name   # 0
