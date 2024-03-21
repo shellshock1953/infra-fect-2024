@@ -59,8 +59,9 @@ spec:
                     - name: repo-name   # 1
                     - name: repo-url    # 2
                     - name: repo-ssh    # 3
-                    - name: sha         # 4
-                    - name: branch      # 5
+                    - name: branch      # 4
+                    - name: sha         # 5
+                    - name: short-sha   # 6
                 templates:
                   - name: main
                     inputs:
@@ -69,8 +70,9 @@ spec:
                         - name: repo-owner
                         - name: repo-url
                         - name: repo-ssh
-                        - name: sha
                         - name: branch
+                        - name: sha
+                        - name: short-sha
                     dag:
                       tasks:
                       - name: status-pending
@@ -104,7 +106,7 @@ spec:
                           - name: image
                             value: 2xnone/appelsin-be
                           - name: tag
-                            value: '{{`{{inputs.parameters.sha | substr 0 7 }}`}}'
+                            value: '{{`{{inputs.parameters.short-sha}}`}}'
 
                       - name: deploy
                         depends: build-image
@@ -122,7 +124,7 @@ spec:
                           - name: yaml_path
                             value: image.tag
                           - name: tag
-                            value: '{{`{{inputs.parameters.sha | substr 0 7 }}`}}'
+                            value: '{{`{{inputs.parameters.short-sha}}`}}'
 
                       - name: status-success
                         depends: deploy
@@ -186,16 +188,21 @@ spec:
                 dependencyName: merge
                 dataTemplate: "git@github.com:{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}"
               dest: spec.arguments.parameters.3.value
-            # sha
-            - src:
-                dependencyName: merge
-                dataTemplate: "{{`{{ .Input.body.after }}`}}"
-              dest: spec.arguments.parameters.4.value
             # branch
             - src:
                 dependencyName: merge
                 dataTemplate: '{{`{{ index (splitList "/" .Input.body.ref ) 2 }}`}}'
+              dest: spec.arguments.parameters.4.value
+            # sha
+            - src:
+                dependencyName: merge
+                dataTemplate: "{{`{{ .Input.body.after }}`}}"
               dest: spec.arguments.parameters.5.value
+            # short-sha
+            - src:
+                dependencyName: merge
+                dataTemplate: "{{`{{ .Input.body.after | substr 0 7 }}`}}"
+              dest: spec.arguments.parameters.6.value
 
       retryStrategy:
         steps: 3
