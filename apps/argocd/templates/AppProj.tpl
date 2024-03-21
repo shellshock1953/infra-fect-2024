@@ -16,4 +16,4 @@ spec:
   - group: '*'
     kind: '*'
   sourceRepos:
-  - https://github.com/shellshock1953/infra-fect-2024
+  - https://github.com/softserve-appelsin/infra
