@@ -196,7 +196,7 @@ spec:
             # branch
             - src:
                 dependencyName: merge
-                dataTemplate: "{{`{{ index (splitList "/" .Input.body.ref ) 2 }}`}}"
+                dataTemplate: {{`{{ index (splitList "/" .Input.body.ref ) 2 }}`}}
               dest: spec.arguments.parameters.5.value
 
       retryStrategy:
