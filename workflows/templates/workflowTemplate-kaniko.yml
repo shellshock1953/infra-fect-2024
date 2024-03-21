@@ -48,11 +48,15 @@ spec:
       workingDir: /src
       image: gcr.io/kaniko-project/executor:debug
       command:
-      - /kaniko/executor
+        - sleep
       args:
-      - --context=/src/{{`{{inputs.parameters.context}}`}}
-      - --destination={{`{{inputs.parameters.image}}`}}:{{`{{inputs.parameters.tag}}`}}
-      - --dockerfile={{`{{inputs.parameters.dockerfile}}`}}
+        - "3600"
+      # command:
+      # - /kaniko/executor
+      # args:
+      # - --context=/src/{{`{{inputs.parameters.context}}`}}
+      # - --destination={{`{{inputs.parameters.image}}`}}:{{`{{inputs.parameters.tag}}`}}
+      # - --dockerfile={{`{{inputs.parameters.dockerfile}}`}}
       volumeMounts:
       - name: docker-config
         mountPath: /kaniko/.docker
