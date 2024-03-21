@@ -23,3 +23,11 @@ Hosted on public dockerhub registries:
 This repo is using Argo Events + Argo Workflows.
 
 Check [./infra/templates] for EventSources, Sensors and Workflows.
+zom
+d
+p
+h
+l
+c§
+o
+m
