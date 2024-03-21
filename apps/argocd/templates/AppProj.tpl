@@ -1,7 +1,9 @@
+{{ if .Values.infra }}
+{{ range .Values.infra.projects }}
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: fect-{{ .Values.be.env }}
+  name: fect-{{ . }}
   namespace: argocd
 spec:
   clusterResourceWhitelist:
@@ -17,3 +19,6 @@ spec:
     kind: '*'
   sourceRepos:
   - https://github.com/softserve-appelsin/infra
+---
+{{ end }}
+{{ end }}

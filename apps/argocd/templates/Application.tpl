@@ -46,25 +46,69 @@ spec:
       - CreateNamespace=true
 ---
 {{ end }}
-{{ if .Values.workflows }}
-# workflows
+{{ if .Values.infra }}
+# CICD
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: fect-workflows-{{ .Values.workflows.env }}
+  name: fect-cicd
   namespace: argocd
 spec:
   destination:
-    namespace: fect-{{ .Values.workflows.env }}
+    namespace: fect-{{ .Values.infra.env }}
     server: https://kubernetes.default.svc
-  project: fect-{{ .Values.workflows.env }}
+  project: fect-{{ .Values.infra.env }}
+  source:
+    path: cicd
+    repoURL: https://github.com/softserve-appelsin/infra
+    targetRevision: {{ .Values.infra.branch }}
+    helm:
+      valueFiles:
+        {{- toYaml .Values.infra.values | nindent 8 }}
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+---
+# WORKFLOWS
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fect-workflows
+  namespace: argocd
+spec:
+  destination:
+    namespace: fect-{{ .Values.infra.env }}
+    server: https://kubernetes.default.svc
+  project: fect-{{ .Values.infra.env }}
   source:
     path: workflows
     repoURL: https://github.com/softserve-appelsin/infra
-    targetRevision: {{ .Values.workflows.branch }}
+    targetRevision: {{ .Values.infra.branch }}
     helm:
       valueFiles:
-        {{- toYaml .Values.workflows.values | nindent 8 }}
+        {{- toYaml .Values.infra.values | nindent 8 }}
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+---
+# SYS
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fect-sys
+  namespace: argocd
+spec:
+  destination:
+    namespace: fect-{{ .Values.infra.env }}
+    server: https://kubernetes.default.svc
+  project: fect-{{ .Values.infra.env }}
+  source:
+    path: apps/sys
+    repoURL: https://github.com/softserve-appelsin/infra
+    targetRevision: {{ .Values.infra.branch }}
+    helm:
+      valueFiles:
+        {{- toYaml .Values.infra.values | nindent 8 }}
   syncPolicy:
     syncOptions:
       - CreateNamespace=true

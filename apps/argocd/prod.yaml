@@ -8,9 +8,3 @@ fe:
   branch: main
   values:
     - prod.yaml
-
-workflows:
-  env: prod
-  branch: main
-  values:
-    - prod.yaml
