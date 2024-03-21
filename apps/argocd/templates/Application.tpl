@@ -46,8 +46,8 @@ spec:
       - CreateNamespace=true
 ---
 {{ end }}
-{{ if .Values.infra }}
-# INFRA
+{{ if .Values.workflows }}
+# workflows
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -55,16 +55,16 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    namespace: fect-{{ .Values.infra.env }}
+    namespace: fect-{{ .Values.workflows.env }}
     server: https://kubernetes.default.svc
-  project: fect-{{ .Values.infra.env }}
+  project: fect-{{ .Values.workflows.env }}
   source:
-    path: apps/infra
+    path: apps/workflows
     repoURL: https://github.com/softserve-appelsin/infra
-    targetRevision: {{ .Values.infra.branch }}
+    targetRevision: {{ .Values.workflows.branch }}
     helm:
       valueFiles:
-        {{- toYaml .Values.infra.values | nindent 8 }}
+        {{- toYaml .Values.workflows.values | nindent 8 }}
   syncPolicy:
     syncOptions:
       - CreateNamespace=true
