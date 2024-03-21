@@ -146,12 +146,12 @@ spec:
             # repo url
             - src:
                 dependencyName: pr-run
-                dataTemplate: "http://github.com/{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}.git"
+                dataTemplate: "http://github.com/{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}"
               dest: spec.arguments.parameters.2.value
             # repo ssh
             - src:
                 dependencyName: pr-run
-                dataTemplate: "git@github.com:{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}.git"
+                dataTemplate: "git@github.com:{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}"
               dest: spec.arguments.parameters.3.value
             # pr number
             - src:
