@@ -3,12 +3,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Sensor
 metadata:
-  name: github
+  name: appelsin-infra-pr
 spec:
   template:
     serviceAccountName: appelsin-workflow-sa
   dependencies:
-    - name: pr-run
+    - name: pr
       eventSourceName: github
       eventName: all-events
       filters:
@@ -138,38 +138,38 @@ spec:
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
-                dependencyName: pr-run
+                dependencyName: pr
                 dataTemplate: "{{`{{ .Input.body.repository.owner.login }}`}}-{{`{{ .Input.body.repository.name }}`}}-pr-{{`{{ .Input.body.pull_request.number }}`}}-{{`{{ .Input.body.pull_request.head.sha | substr 0 7 }}`}}"
               dest: metadata.name
               operation: append
             # repo owner
             - src:
-                dependencyName: pr-run
+                dependencyName: pr
                 dataKey: body.repository.owner.login
               dest: spec.arguments.parameters.0.value
             # repo name
             - src:
-                dependencyName: pr-run
+                dependencyName: pr
                 dataKey: body.repository.name
               dest: spec.arguments.parameters.1.value
             # repo url
             - src:
-                dependencyName: pr-run
+                dependencyName: pr
                 dataTemplate: "http://github.com/{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}"
               dest: spec.arguments.parameters.2.value
             # repo ssh
             - src:
-                dependencyName: pr-run
+                dependencyName: pr
                 dataTemplate: "git@github.com:{{`{{ .Input.body.repository.owner.login }}`}}/{{`{{ .Input.body.repository.name }}`}}"
               dest: spec.arguments.parameters.3.value
             # pr number
             - src:
-                dependencyName: pr-run
+                dependencyName: pr
                 dataKey: body.pull_request.number
               dest: spec.arguments.parameters.4.value
             # sha
             - src:
-                dependencyName: pr-run
+                dependencyName: pr
                 # dataTemplate: "{{`{{ .Input.body.pull_request.head.sha | substr 0 7 }}`}}"
                 dataTemplate: "{{`{{ .Input.body.pull_request.head.sha }}`}}"
               dest: spec.arguments.parameters.5.value
