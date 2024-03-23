@@ -136,7 +136,7 @@ spec:
                           - name: sha
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
-                            value: '{{workflow.status | toLower}}'
+                            value: '{{`{{workflow.status | toLower}}`}}'
                       - name: notify
                         dag:
                           tasks:
