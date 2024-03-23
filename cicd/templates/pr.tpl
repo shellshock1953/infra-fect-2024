@@ -51,7 +51,7 @@ spec:
                 generateName: github-
               spec:
                 entrypoint: main
-                onExit: notify
+                onExit: exit-handler
                 volumes:
                 - name: docker-config
                   secret:
@@ -118,8 +118,10 @@ spec:
                           - name: dockerfile
                             value: {{ $app.dockerfile }}
 
+                  - name: exit-handler
+                    dag:
+                      tasks:
                       - name: status-success
-                        depends: build-image
                         templateRef:
                           name: github-status
                           template: main
@@ -134,24 +136,24 @@ spec:
                           - name: sha
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
-                            value: success
-                  - name: notify
-                    dag:
-                      tasks:
-                      - name: ntfy
-                        templateRef:
-                          name: ntfy
-                          template: main
-                        arguments:
-                          parameters:
-                          - name: channel
-                            value: appelsin
-                          - name: status
-                            value: '{{`{{workflow.status}}`}}'
-                          - name: success
-                            value: "{{ $app.name }}: Build completed"
-                          - name: fail
-                            value: "{{ $app.name }}: Build failed"
+                            value: '{{workflow.status | toLower}}'
+                      - name: notify
+                        dag:
+                          tasks:
+                          - name: ntfy
+                            templateRef:
+                              name: ntfy
+                              template: main
+                            arguments:
+                              parameters:
+                              - name: channel
+                                value: appelsin
+                              - name: status
+                                value: '{{`{{workflow.status}}`}}'
+                              - name: success
+                                value: "{{ $app.name }}: Build completed"
+                              - name: fail
+                                value: "{{ $app.name }}: Build failed"
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
