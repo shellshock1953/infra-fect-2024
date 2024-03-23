@@ -51,7 +51,7 @@ spec:
                 generateName: github-
               spec:
                 entrypoint: main
-                onExit: exit-handler
+                onExit: notify
                 volumes:
                 - name: docker-config
                   secret:
@@ -118,18 +118,16 @@ spec:
                           - name: dockerfile
                             value: {{ $app.dockerfile }}
 
-                  - name: exit-handler
+                  - name: notify
                     inputs:
                       parameters:
                         - name: repo-name
                         - name: repo-owner
-                        - name: repo-url
-                        - name: repo-ssh
-                        - name: pr-number
                         - name: sha
                     dag:
                       tasks:
                       - name: status-success
+                        depends: build-image
                         templateRef:
                           name: github-status
                           template: main
@@ -144,21 +142,7 @@ spec:
                           - name: sha
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
-                            value: '{{`{{workflow.status | toLower}}`}}'
-                      - name: notify
-                        templateRef:
-                          name: ntfy
-                          template: main
-                        arguments:
-                          parameters:
-                          - name: channel
-                            value: appelsin
-                          - name: status
-                            value: '{{`{{workflow.status}}`}}'
-                          - name: success
-                            value: "{{ $app.name }}: Build completed"
-                          - name: fail
-                            value: "{{ $app.name }}: Build failed"
+                            value: success
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
