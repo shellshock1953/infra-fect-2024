@@ -118,15 +118,8 @@ spec:
                           - name: dockerfile
                             value: {{ $app.dockerfile }}
 
-                  - name: notify
-                    inputs:
-                      parameters:
-                        - name: repo-name
-                        - name: repo-owner
-                        - name: sha
-                    dag:
-                      tasks:
                       - name: status-success
+                        depends: build-image
                         templateRef:
                           name: github-status
                           template: main
@@ -142,6 +135,23 @@ spec:
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
                             value: success
+                  - name: notify
+                    dag:
+                      tasks:
+                      - name: ntfy
+                        templateRef:
+                          name: ntfy
+                          template: main
+                        arguments:
+                          parameters:
+                          - name: channel
+                            value: appelsin
+                          - name: status
+                            value: '{{`{{workflow.status}}`}}'
+                          - name: success
+                            value: "{{ $app.name }}: Build completed"
+                          - name: fail
+                            value: "{{ $app.name }}: Build failed"
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
