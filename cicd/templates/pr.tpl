@@ -119,6 +119,14 @@ spec:
                             value: {{ $app.dockerfile }}
 
                   - name: exit-handler
+                    inputs:
+                      parameters:
+                        - name: repo-name
+                        - name: repo-owner
+                        - name: repo-url
+                        - name: repo-ssh
+                        - name: pr-number
+                        - name: sha
                     dag:
                       tasks:
                       - name: status-success
