@@ -127,7 +127,6 @@ spec:
                     dag:
                       tasks:
                       - name: status-success
-                        depends: build-image
                         templateRef:
                           name: github-status
                           template: main
