@@ -19,13 +19,18 @@ Hosted on public dockerhub registries:
 - [Frontend](https://hub.docker.com/r/2xnone/appelsin-fe)
 - [Backend](https://hub.docker.com/r/2xnone/appelsin-be)
 
-## SysEnvs
-[stage BE](https://api.appelsin.stage.dnull.systems)
-[stage FE](https://appelsin.stage.dnull.systems)
+## Links
+### Prod
 
-## Events and Workflows
-This repo is using Argo Events + Argo Workflows.
+- [BE](https://api.appelsin.dnull.systems)
+- [FE](https://appelsin.dnull.systems)
 
-Check [./infra/templates] for EventSources, Sensors and Workflows.
+### Stage
 
+- [BE](https://api.appelsin.stage.dnull.systems)
+- [FE](https://appelsin.stage.dnull.systems)
 
+### Infra
+- [ArgoCD](https://argocd.dnull.systems)
+- [Argo-Workflows](https://argo-workflows.dnull.systems)
+- [Grafana](https://grafana.dnull.systems)
