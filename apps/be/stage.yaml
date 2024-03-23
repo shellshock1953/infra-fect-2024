@@ -8,6 +8,6 @@ ingress:
   path: /
   port: 8000
 secrets:
-  - secretKey: SECRET_KEY
+  - secretKey: SECRET_KEY_PROJECT
     remoteRef:
       key: /appelsin/app/be/prod/SECRET_KEY
