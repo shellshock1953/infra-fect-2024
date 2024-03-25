@@ -1,7 +1,7 @@
 kind: Job
 apiVersion: batch/v1
 metadata:
-  name: {{ .Values.name }}
+  name: {{ .Values.name }}-migrate
   labels:
     app: {{ .Values.name }}
   annotations:
