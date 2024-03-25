@@ -6,6 +6,7 @@ metadata:
     argocd.argoproj.io/compare-options: IgnoreExtraneous
     argocd.argoproj.io/sync-options: Prune=false
     argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "0"
   labels: {}
   refreshInterval: 1h
 spec:
