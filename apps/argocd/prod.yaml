@@ -5,6 +5,6 @@ be:
     - prod.yaml
 fe:
   env: prod
-  branch: main
+  branch: SSP-83
   values:
     - prod.yaml
