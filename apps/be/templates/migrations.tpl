@@ -17,5 +17,8 @@ spec:
       - name: {{ .Values.name }}
         image: {{ .Values.image.repo }}:{{ .Values.image.tag }}
         command: ["python", "manage.py", "migrate"]
+        envFrom:
+        - secretRef:
+            name: {{ .Values.name }}
       restartPolicy: Never
   backoffLimit: 2
