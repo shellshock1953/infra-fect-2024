@@ -1,6 +1,6 @@
 be:
   env: stage
-  branch: SSP-83
+  branch: main
   values:
     - stage.yaml
 fe:
