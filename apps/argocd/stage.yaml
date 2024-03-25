@@ -5,6 +5,6 @@ be:
     - stage.yaml
 fe:
   env: stage
-  branch: main
+  branch: SSP-83
   values:
     - stage.yaml
