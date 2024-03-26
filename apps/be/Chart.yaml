@@ -4,3 +4,7 @@ version: 0.1.0
 description: A Helm chart for FECT 2024 Backend
 name: fect-backend
 appVersion: 0.0.1
+dependencies:
+  - name: postgresql
+    repository: oci://registry-1.docker.io/bitnamicharts/postgresql
+    version: 15.1.4
