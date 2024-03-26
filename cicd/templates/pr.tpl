@@ -204,7 +204,7 @@ spec:
               dest: spec.arguments.parameters.5.value
             # short-sha
             - src:
-                dependencyName: merge
+                dependencyName: pr
                 dataTemplate: "{{`{{ .Input.body.after | substr 0 7 }}`}}"
               dest: spec.arguments.parameters.6.value
 
