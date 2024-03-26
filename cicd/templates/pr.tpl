@@ -117,6 +117,8 @@ spec:
                             value: 2xnone/appelsin-{{ $app.name }}
                           - name: dockerfile
                             value: {{ $app.dockerfile }}
+                          - name: tag
+                            value: '{{`{{inputs.parameters.short-sha}}`}}'
 
                       - name: run-tests
                         depends: build-image
@@ -124,7 +126,7 @@ spec:
                         arguments:
                           parameters:
                           - name: sha
-                            value: '{{`{{inputs.parameters.sha}}`}}'
+                            value: '{{`{{inputs.parameters.short-sha}}`}}'
 
                   - name: run-tests
                     inputs:
