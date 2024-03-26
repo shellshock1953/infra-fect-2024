@@ -1,6 +1,10 @@
 apps:
   - name: be
     dockerfile: Dockerfile
+    tests:
+      command: "python manage.py test"
   - name: fe
     dockerfile: Dockerfile.deploy
+    tests:
+      command: "echo 'tests'"
 

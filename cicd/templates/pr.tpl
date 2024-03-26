@@ -51,7 +51,7 @@ spec:
                 generateName: github-
               spec:
                 entrypoint: main
-                onExit: notify
+                onExit: exit-handler
                 volumes:
                 - name: docker-config
                   secret:
@@ -73,6 +73,7 @@ spec:
                     - name: repo-ssh    # 3
                     - name: pr-number   # 4
                     - name: sha         # 5
+                    - name: short-sha   # 6
                 templates:
                   - name: main
                     inputs:
@@ -83,6 +84,7 @@ spec:
                         - name: repo-ssh
                         - name: pr-number
                         - name: sha
+                        - name: short-sha
                     dag:
                       tasks:
                       - name: status-pending
@@ -117,9 +119,37 @@ spec:
                             value: 2xnone/appelsin-{{ $app.name }}
                           - name: dockerfile
                             value: {{ $app.dockerfile }}
+                          - name: tag
+                            value: '{{`{{inputs.parameters.short-sha}}`}}'
 
-                      - name: status-success
+                      - name: run-tests
                         depends: build-image
+                        template: run-tests
+                        arguments:
+                          parameters:
+                          - name: short-sha
+                            value: '{{`{{inputs.parameters.short-sha}}`}}'
+
+                  - name: run-tests
+                    inputs:
+                      parameters:
+                        - name: short-sha
+                    container:
+                      name: run-tests
+                      image: 2xnone/appelsin-{{ $app.name }}:{{`{{inputs.parameters.short-sha}}`}}
+                      command: ["/bin/sh", "-c"]
+                      args: [{{ $app.tests.command | quote }}]
+
+                  - name: exit-handler
+                    inputs:
+                      parameters:
+                        - name: repo-name
+                        - name: repo-owner
+                        - name: sha
+                    dag:
+                      tasks:
+                      - name: success
+                        when: "'{{`{{workflow.status}}`}}' == 'Succeeded'"
                         templateRef:
                           name: github-status
                           template: main
@@ -135,23 +165,23 @@ spec:
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
                             value: success
-                  - name: notify
-                    dag:
-                      tasks:
-                      - name: ntfy
+                      - name: failure
+                        when: "'{{`{{workflow.status}}`}}' != 'Succeeded'"
                         templateRef:
-                          name: ntfy
+                          name: github-status
                           template: main
                         arguments:
                           parameters:
-                          - name: channel
-                            value: appelsin
+                          - name: name
+                            value: argo-events
+                          - name: description
+                            value: Tests failed
+                          - name: repo
+                            value: '{{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}}'
+                          - name: sha
+                            value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
-                            value: '{{`{{workflow.status}}`}}'
-                          - name: success
-                            value: "{{ $app.name }}: Build completed"
-                          - name: fail
-                            value: "{{ $app.name }}: Build failed"
+                            value: failure
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
@@ -190,6 +220,11 @@ spec:
                 # dataTemplate: "{{`{{ .Input.body.pull_request.head.sha | substr 0 7 }}`}}"
                 dataTemplate: "{{`{{ .Input.body.pull_request.head.sha }}`}}"
               dest: spec.arguments.parameters.5.value
+            # short-sha
+            - src:
+                dependencyName: pr
+                dataTemplate: "{{`{{ .Input.body.after | substr 0 7 }}`}}"
+              dest: spec.arguments.parameters.6.value
 
       retryStrategy:
         steps: 3
