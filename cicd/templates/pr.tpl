@@ -121,7 +121,8 @@ spec:
                       - name: run-tests
                         depends: build-image
                         container:
-                          image: 2xnone/appelsin-{{ $app.name }}
+                          name: run-tests
+                          image: 2xnone/appelsin-{{ $app.name }}:'{{`{{inputs.parameters.sha}}`}}'
                           command: ["/bin/sh", "-c"]
                           args: [{{ $app.tests.command | quote }}]
 
