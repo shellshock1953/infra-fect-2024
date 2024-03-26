@@ -1,22 +1,45 @@
+sysenv: stage
 name: fect-be
+
 replicas: 1
+
 image:
   repo: 2xnone/appelsin-be
   tag: 28ebf82
+
 ingress:
   host: api.appelsin.stage.dnull.systems
   path: /
   port: 8000
+
 secrets:
   - secretKey: SECRET_KEY_PROJECT
     remoteRef:
       key: /appelsin/app/be/prod/SECRET_KEY
+  - secretKey: POSTGRESQL_PASSWORD
+    remoteRef:
+      key: /appelsin/app/be/stage/POSTGRESQL_PASSWORD
+  - secretKey: POSTGRESQL_ADMIN_PASSWORD
+    remoteRef:
+      key: /appelsin/infra/postgres/stage
+
+env:
+  - name: POSTGRESQL_DATABASE
+    value: appelsin
+  - name: POSTGRESQL_USERNAME
+    value: appelsin
+  - name: POSTGRESQL_HOST
+    value: fect-be-stage-postgresql.fect-stage.svc
+  - name: POSTGRESQL_PORT
+    value: "5432"
 
 postgresql:
   global:
     postgresql:
       auth:
-        postgresPassword: "changeme"
-        username: "appelsin"
-        password: "appelsin"
-        database: "appelsin"
+        username: appelsin
+        database: appelsin
+        existingSecret: fect-be
+        secretKeys:
+          adminPasswordKey: POSTGRESQL_ADMIN_PASSWORD
+          userPasswordKey: POSTGRESQL_USERNAME

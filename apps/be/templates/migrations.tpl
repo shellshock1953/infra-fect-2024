@@ -20,16 +20,9 @@ spec:
         envFrom:
         - secretRef:
             name: {{ .Values.name }}
+        {{- with .Values.env }}
         env:
-        - name: POSTGRESQL_DATABASE
-          value: appelsin
-        - name: POSTGRESQL_USERNAME
-          value: appelsin
-        - name: POSTGRESQL_PASSWORD
-          value: appelsin
-        - name: POSTGRESQL_HOST
-          value: fect-be-stage-postgresql.fect-stage.svc
-        - name: POSTGRESQL_PORT
-          value: "5432"
+        {{ . | toYaml | nindent 8 }}
+        {{- end }}
       restartPolicy: Never
   backoffLimit: 2
