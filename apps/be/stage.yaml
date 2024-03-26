@@ -2,7 +2,7 @@ name: fect-be
 replicas: 1
 image:
   repo: 2xnone/appelsin-be
-  tag: 1ad254b
+  tag: 28ebf82
 ingress:
   host: api.appelsin.stage.dnull.systems
   path: /
@@ -11,7 +11,6 @@ secrets:
   - secretKey: SECRET_KEY_PROJECT
     remoteRef:
       key: /appelsin/app/be/prod/SECRET_KEY
-
 postgresql:
   global:
     postgresql:
