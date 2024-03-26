@@ -15,7 +15,7 @@ ingress:
 secrets:
   - secretKey: SECRET_KEY_PROJECT
     remoteRef:
-      key: /appelsin/app/be/prod/SECRET_KEY
+      key: /appelsin/app/be/stage/SECRET_KEY
   - secretKey: POSTGRESQL_PASSWORD
     remoteRef:
       key: /appelsin/app/be/stage/POSTGRESQL_PASSWORD
