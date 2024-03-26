@@ -73,6 +73,7 @@ spec:
                     - name: repo-ssh    # 3
                     - name: pr-number   # 4
                     - name: sha         # 5
+                    - name: short-sha   # 6
                 templates:
                   - name: main
                     inputs:
@@ -83,6 +84,7 @@ spec:
                         - name: repo-ssh
                         - name: pr-number
                         - name: sha
+                        - name: short-sha
                     dag:
                       tasks:
                       - name: status-pending
@@ -200,6 +202,11 @@ spec:
                 # dataTemplate: "{{`{{ .Input.body.pull_request.head.sha | substr 0 7 }}`}}"
                 dataTemplate: "{{`{{ .Input.body.pull_request.head.sha }}`}}"
               dest: spec.arguments.parameters.5.value
+            # short-sha
+            - src:
+                dependencyName: merge
+                dataTemplate: "{{`{{ .Input.body.after | substr 0 7 }}`}}"
+              dest: spec.arguments.parameters.6.value
 
       retryStrategy:
         steps: 3
