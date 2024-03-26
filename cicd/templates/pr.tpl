@@ -161,7 +161,7 @@ spec:
                           - name: sha
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
-                            value: '{{`{{workflow.status}}`}}'
+                            value: '{{`{{workflow.status | toLower }}`}}'
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
