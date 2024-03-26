@@ -175,7 +175,7 @@ spec:
                           - name: name
                             value: argo-events
                           - name: description
-                            value: Tests completed
+                            value: Tests failed
                           - name: repo
                             value: '{{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}}'
                           - name: sha
