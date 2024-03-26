@@ -51,7 +51,7 @@ spec:
                 generateName: github-
               spec:
                 entrypoint: main
-                onExit: notify
+                onExit: exit-handler
                 volumes:
                 - name: docker-config
                   secret:
@@ -118,40 +118,34 @@ spec:
                           - name: dockerfile
                             value: {{ $app.dockerfile }}
 
-                      - name: status-success
+                      - name: run-tests
                         depends: build-image
-                        templateRef:
-                          name: github-status
-                          template: main
-                        arguments:
-                          parameters:
-                          - name: name 
-                            value: argo-events
-                          - name: description 
-                            value: Tests completed
-                          - name: repo
-                            value: '{{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}}'
-                          - name: sha
-                            value: '{{`{{inputs.parameters.sha}}`}}'
-                          - name: status
-                            value: success
-                  - name: notify
-                    dag:
-                      tasks:
-                      - name: ntfy
-                        templateRef:
-                          name: ntfy
-                          template: main
-                        arguments:
-                          parameters:
-                          - name: channel
-                            value: appelsin
-                          - name: status
-                            value: '{{`{{workflow.status}}`}}'
-                          - name: success
-                            value: "{{ $app.name }}: Build completed"
-                          - name: fail
-                            value: "{{ $app.name }}: Build failed"
+                        container:
+                          image: 2xnone/appelsin-{{ $app.name }}
+                          command: ["/bin/sh", "-c"]
+                          args: [{{ $app.tests.command | quote }}]
+
+                  - name: exit-handler
+                    inputs:
+                      parameters:
+                        - name: repo-name
+                        - name: repo-owner
+                        - name: sha
+                    templateRef:
+                      name: github-status
+                      template: main
+                    arguments:
+                      parameters:
+                      - name: name 
+                        value: argo-events
+                      - name: description 
+                        value: Tests completed
+                      - name: repo
+                        value: '{{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}}'
+                      - name: sha
+                        value: '{{`{{inputs.parameters.sha}}`}}'
+                      - name: status
+                        value: '{{`{{workflow.status}}`}}'
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
