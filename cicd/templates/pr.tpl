@@ -125,16 +125,16 @@ spec:
                         template: run-tests
                         arguments:
                           parameters:
-                          - name: sha
+                          - name: short-sha
                             value: '{{`{{inputs.parameters.short-sha}}`}}'
 
                   - name: run-tests
                     inputs:
                       parameters:
-                        - name: sha
+                        - name: short-sha
                     container:
                       name: run-tests
-                      image: 2xnone/appelsin-{{ $app.name }}:{{`{{inputs.parameters.sha}}`}}
+                      image: 2xnone/appelsin-{{ $app.name }}:{{`{{inputs.parameters.short-sha}}`}}
                       command: ["/bin/sh", "-c"]
                       args: [{{ $app.tests.command | quote }}]
 
