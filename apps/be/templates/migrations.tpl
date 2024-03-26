@@ -30,6 +30,6 @@ spec:
         - name: POSTGRESQL_HOST
           value: postgresql
         - name: POSTGRESQL_PORT
-          value: 5432
+          value: "5432"
       restartPolicy: Never
   backoffLimit: 2
