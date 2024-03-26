@@ -149,7 +149,7 @@ spec:
                     dag:
                       tasks:
                       - name: success
-                        when: "'{{`{{inputs.parameters.status}}`}}' == 'Succeeded'"
+                        when: "'{{`{{workflow.status}}`}}' == 'Succeeded'"
                         templateRef:
                           name: github-status
                           template: main
@@ -166,7 +166,7 @@ spec:
                           - name: status
                             value: success
                       - name: failure
-                        when: "'{{`{{inputs.parameters.status}}`}}' != 'Succeeded'"
+                        when: "'{{`{{workflow.status}}`}}' != 'Succeeded'"
                         templateRef:
                           name: github-status
                           template: main
