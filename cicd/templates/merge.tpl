@@ -167,7 +167,7 @@ spec:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
                 dependencyName: merge
-                dataTemplate: "{{`{{ .Input.body.repository.owner.login }}`}}-{{`{{ .Input.body.repository.name }}`}}-push-main-{{`{{ .Input.body.after | substr 0 7 }}`}}"
+                dataTemplate: "{{`{{ .Input.body.repository.owner.login }}`}}-{{`{{ .Input.body.repository.name }}`}}-push-{{`{{ index (splitList "/" .Input.body.ref ) 2 }}`}}-{{`{{ .Input.body.after | substr 0 7 }}`}}"
               dest: metadata.name
               operation: append
             # repo owner
