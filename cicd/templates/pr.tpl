@@ -120,11 +120,21 @@ spec:
 
                       - name: run-tests
                         depends: build-image
-                        container:
-                          name: run-tests
-                          image: 2xnone/appelsin-{{ $app.name }}:'{{`{{inputs.parameters.sha}}`}}'
-                          command: ["/bin/sh", "-c"]
-                          args: [{{ $app.tests.command | quote }}]
+                        template: run-tests
+                        arguments:
+                          parameters:
+                          - name: sha
+                            value: '{{`{{inputs.parameters.sha}}`}}'
+
+                  - name: run-tests
+                    inputs:
+                      parameters:
+                        - name: sha
+                    container:
+                      name: run-tests
+                      image: 2xnone/appelsin-{{ $app.name }}:{{`{{inputs.parameters.sha}}`}}
+                      command: ["/bin/sh", "-c"]
+                      args: [{{ $app.tests.command | quote }}]
 
                   - name: exit-handler
                     inputs:
