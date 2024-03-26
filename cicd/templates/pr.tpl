@@ -148,7 +148,8 @@ spec:
                         - name: sha
                     dag:
                       tasks:
-                      - name: github-status
+                      - name: success
+                        when: "'{{`{{inputs.parameters.status}}`}}' == 'Succeeded'"
                         templateRef:
                           name: github-status
                           template: main
@@ -163,7 +164,24 @@ spec:
                           - name: sha
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
-                            value: '{{`{{ lower workflow.status }}`}}'
+                            value: success
+                      - name: failure
+                        when: "'{{`{{inputs.parameters.status}}`}}' != 'Succeeded'"
+                        templateRef:
+                          name: github-status
+                          template: main
+                        arguments:
+                          parameters:
+                          - name: name
+                            value: argo-events
+                          - name: description
+                            value: Tests completed
+                          - name: repo
+                            value: '{{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}}'
+                          - name: sha
+                            value: '{{`{{inputs.parameters.sha}}`}}'
+                          - name: status
+                            value: failure
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
