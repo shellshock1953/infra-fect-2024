@@ -42,4 +42,4 @@ postgresql:
         existingSecret: fect-be
         secretKeys:
           adminPasswordKey: POSTGRESQL_ADMIN_PASSWORD
-          userPasswordKey: POSTGRESQL_USERNAME
+          userPasswordKey: POSTGRESQL_PASSWORD
