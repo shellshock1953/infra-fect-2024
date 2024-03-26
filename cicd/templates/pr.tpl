@@ -142,21 +142,24 @@ spec:
                         - name: repo-name
                         - name: repo-owner
                         - name: sha
-                    templateRef:
-                      name: github-status
-                      template: main
-                    arguments:
-                      parameters:
-                      - name: name 
-                        value: argo-events
-                      - name: description 
-                        value: Tests completed
-                      - name: repo
-                        value: '{{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}}'
-                      - name: sha
-                        value: '{{`{{inputs.parameters.sha}}`}}'
-                      - name: status
-                        value: '{{`{{workflow.status}}`}}'
+                    dag:
+                      tasks:
+                      - name: github-status
+                        templateRef:
+                          name: github-status
+                          template: main
+                        arguments:
+                          parameters:
+                          - name: name 
+                            value: argo-events
+                          - name: description 
+                            value: Tests completed
+                          - name: repo
+                            value: '{{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}}'
+                          - name: sha
+                            value: '{{`{{inputs.parameters.sha}}`}}'
+                          - name: status
+                            value: '{{`{{workflow.status}}`}}'
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
