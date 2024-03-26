@@ -9,3 +9,12 @@ ingress:
   host: api.appelsin.dnull.systems
   path: /
   port: 8000
+
+postgresql:
+  global:
+    postgresql:
+      auth:
+        postgresPassword: "changeme"
+        username: "appelsin"
+        password: "appelsin"
+        database: "appelsin"

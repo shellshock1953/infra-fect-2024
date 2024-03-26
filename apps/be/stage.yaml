@@ -11,6 +11,7 @@ secrets:
   - secretKey: SECRET_KEY_PROJECT
     remoteRef:
       key: /appelsin/app/be/prod/SECRET_KEY
+
 postgresql:
   global:
     postgresql:
