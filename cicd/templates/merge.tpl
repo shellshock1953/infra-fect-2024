@@ -40,6 +40,7 @@ spec:
                 generateName: github-
               spec:
                 entrypoint: main
+                onExit: exit-handler
                 volumes:
                 - name: docker-config
                   secret:
@@ -128,8 +129,18 @@ spec:
                           - name: tag
                             value: '{{`{{inputs.parameters.short-sha}}`}}'
 
-                      - name: status-success
-                        depends: deploy
+                  - name: exit-handler
+                    inputs:
+                      parameters:
+                        - name: repo-name
+                        - name: repo-owner
+                        - name: branch
+                        - name: sha
+                    dag:
+                      tasks:
+                      # SUCCESS
+                      - name: github-status-success
+                        when: "'{{`{{workflow.status}}`}}' == 'Succeeded'"
                         templateRef:
                           name: github-status
                           template: main
@@ -138,36 +149,55 @@ spec:
                           - name: name 
                             value: argo-events
                           - name: description 
-                            value: Image deployed
+                            value: Deploy successful
                           - name: repo
                             value: '{{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}}'
                           - name: sha
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
                             value: success
-
-                  - name: notify
-                    dag:
-                      tasks:
-                      - name: ntfy
+                      - name: telegram-status-success
+                        when: "'{{`{{workflow.status}}`}}' == 'Succeeded'"
                         templateRef:
-                          name: ntfy
+                          name: telegram-send
                           template: main
                         arguments:
                           parameters:
-                          - name: channel
-                            value: appelsin
+                          - name: message
+                            value: '✅ {{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}} {{`{{inputs.parameters.branch }}`}} deployed'
+
+                    # FAILURE
+                      - name: github-status-failure
+                        when: "'{{`{{workflow.status}}`}}' != 'Succeeded'"
+                        templateRef:
+                          name: github-status
+                          template: main
+                        arguments:
+                          parameters:
+                          - name: name
+                            value: argo-events
+                          - name: description
+                            value: Deploy failed
+                          - name: repo
+                            value: '{{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}}'
+                          - name: sha
+                            value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
-                            value: '{{`{{workflow.status}}`}}'
-                          - name: success
-                            value: "{{ $app.name }}: Build completed"
-                          - name: fail
-                            value: "{{ $app.name }}: Build failed"
+                            value: failure
+                      - name: telegram-status-failure
+                        when: "'{{`{{workflow.status}}`}}' != 'Succeeded'"
+                        templateRef:
+                          name: telegram-send
+                          template: main
+                        arguments:
+                          parameters:
+                          - name: message
+                            value: '❌ {{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}} {{`{{inputs.parameters.branch}}`}} deployment failed'
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
                 dependencyName: merge
-                dataTemplate: "{{`{{ .Input.body.repository.owner.login }}`}}-{{`{{ .Input.body.repository.name }}`}}-push-{{`{{ index (splitList "/" .Input.body.ref ) 2 }}`}}-{{`{{ .Input.body.after | substr 0 7 }}`}}"
+                dataTemplate: "{{`{{ .Input.body.repository.owner.login }}`}}-{{`{{ .Input.body.repository.name }}`}}-push-{{`{{ .Input.body.after | substr 0 7 }}`}}"
               dest: metadata.name
               operation: append
             # repo owner
