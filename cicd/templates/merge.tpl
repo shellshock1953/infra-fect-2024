@@ -192,7 +192,7 @@ spec:
                         arguments:
                           parameters:
                           - name: message
-                            value: '❌ {{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}} {{`{{inputs.parameters.branch}}`}} failed'
+                            value: '❌ {{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}} {{`{{inputs.parameters.branch}}`}} deployment failed'
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
