@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json
+---
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: telegram-send
+spec:
+  entrypoint: main
+  arguments:
+    parameters:
+      - name: message
+
+  templates:
+    - name: main
+      inputs:
+        parameters:
+          - name: message
+      container:
+        image: curlimages/curl:latest
+        command: ["/bin/sh", "-xc"]
+        args:
+          - >
+            MESSAGE="{{`{{inputs.parameters.message}}`}}" \
+            curl -X POST \
+                 -H 'Content-Type: application/json' \
+                 -d "{\"chat_id\": \"${TELEGRAM_CHAT_ID}\", \"text\": \"${MESSAGE}\", \"disable_notification\": true}" \
+                 "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+        env:
+          - name: TELEGRAM_BOT_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: telegram-send
+                key: token
+          - name: TELEGRAM_CHAT_ID
+            valueFrom:
+              secretKeyRef:
+                name: telegram-send
+                key: chat

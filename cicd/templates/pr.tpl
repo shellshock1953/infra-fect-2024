@@ -145,10 +145,12 @@ spec:
                       parameters:
                         - name: repo-name
                         - name: repo-owner
+                        - name: pr-number
                         - name: sha
                     dag:
                       tasks:
-                      - name: success
+                      # SUCCESS
+                      - name: github-status-success
                         when: "'{{`{{workflow.status}}`}}' == 'Succeeded'"
                         templateRef:
                           name: github-status
@@ -165,7 +167,18 @@ spec:
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
                             value: success
-                      - name: failure
+                      - name: telegram-status-success
+                        when: "'{{`{{workflow.status}}`}}' == 'Succeeded'"
+                        templateRef:
+                          name: telegram-send
+                          template: main
+                        arguments:
+                          parameters:
+                          - name: message
+                            value: '✅ {{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}} PR #{{`{{inputs.parameters.pr-number}}`}} - success'
+
+                    # FAILURE
+                      - name: github-status-failure
                         when: "'{{`{{workflow.status}}`}}' != 'Succeeded'"
                         templateRef:
                           name: github-status
@@ -182,6 +195,15 @@ spec:
                             value: '{{`{{inputs.parameters.sha}}`}}'
                           - name: status
                             value: failure
+                      - name: telegram-status-failure
+                        when: "'{{`{{workflow.status}}`}}' != 'Succeeded'"
+                        templateRef:
+                          name: telegram-send
+                          template: main
+                        arguments:
+                          parameters:
+                          - name: message
+                            value: '❌ {{`{{inputs.parameters.repo-owner}}`}}/{{`{{inputs.parameters.repo-name}}`}} PR #{{`{{inputs.parameters.pr-number}}`}} - failed'
           parameters:
             # Workflow name  <owner>-<repo>-pr-<pr-no>-<short-sha>
             - src:
