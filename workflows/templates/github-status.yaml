@@ -25,7 +25,7 @@ spec:
           - name: status
       container:
         image: curlimages/curl:latest
-        command: ["/bin/sh", "-xc"]
+        command: ["/bin/sh", "-c"]
         # status: error, failure, pending, or success
         args:
           - >

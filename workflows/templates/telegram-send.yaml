@@ -17,7 +17,7 @@ spec:
           - name: message
       container:
         image: curlimages/curl:latest
-        command: ["/bin/sh", "-xc"]
+        command: ["/bin/sh", "-c"]
         args:
           - >
             curl -X POST \
