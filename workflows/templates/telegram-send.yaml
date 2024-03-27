@@ -20,10 +20,9 @@ spec:
         command: ["/bin/sh", "-xc"]
         args:
           - >
-            MESSAGE="{{`{{inputs.parameters.message}}`}}" \
             curl -X POST \
                  -H 'Content-Type: application/json' \
-                 -d "{\"chat_id\": \"${TELEGRAM_CHAT_ID}\", \"text\": \"${MESSAGE}\", \"disable_notification\": true}" \
+                 -d "{\"chat_id\": \"${TELEGRAM_CHAT_ID}\", \"text\": \"{{`{{inputs.parameters.message}}`}}\", \"disable_notification\": true}" \
                  "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
         env:
           - name: TELEGRAM_BOT_TOKEN
