@@ -139,6 +139,9 @@ spec:
                       image: 2xnone/appelsin-{{ $app.name }}:{{`{{inputs.parameters.short-sha}}`}}
                       command: ["/bin/sh", "-c"]
                       args: [{{ $app.tests.command | quote }}]
+                      env:
+                        - name: SECRET_KEY_PROJECT
+                          value: "CI-example"
 
                   - name: exit-handler
                     inputs:
