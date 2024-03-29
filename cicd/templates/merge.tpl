@@ -110,6 +110,10 @@ spec:
                             value: '{{`{{inputs.parameters.short-sha}}`}}'
                           - name: dockerfile
                             value: {{ $app.dockerfile }}
+                          {{- if $app.buildArg }}
+                          - name: buildarg
+                            value: 'SYSENV={{`{{inputs.parameters.branch}}`}}'
+                          {{- end }}
 
                       - name: deploy
                         depends: build-image

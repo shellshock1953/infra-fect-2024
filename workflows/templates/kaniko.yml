@@ -35,6 +35,8 @@ spec:
           default: Dockerfile
         - name: context
           default: .
+        - name: buildarg
+          default: FOO=BAR
       artifacts:
       - name: private-source
         path: /src
@@ -57,6 +59,7 @@ spec:
       - --context=/src/{{`{{inputs.parameters.context}}`}}
       - --destination={{`{{inputs.parameters.image}}`}}:{{`{{inputs.parameters.tag}}`}}
       - --dockerfile={{`{{inputs.parameters.dockerfile}}`}}
+      - --build-arg={{`inputs.parameters.buildarg}}`}}
       volumeMounts:
       - name: docker-config
         mountPath: /kaniko/.docker
