@@ -61,8 +61,8 @@ config:
       icon: mdi-school
       displayData:
         sortBy: default
-        rows: 1
-        cols: 2
+        rows: 3
+        cols: 1
         collapsed: false
         hideForGuests: false
       items:
