@@ -67,6 +67,7 @@ config:
         hideForGuests: false
       items:
         - title: Jira
+          description: Task management
           icon: fab fa-jira
           url: https://soft-serve.atlassian.net/jira/software/projects/SSP/boards/2
           # Prod
@@ -91,20 +92,26 @@ config:
         hideForGuests: false
       items:
         - title: Grafana
+          description: Monitoring
           url: http://grafana.dnull.systems/login
           icon: si-grafana
         - title: Status Page
+          description: Uptime checker
           url: https://uptime.dnull.systems/status/appelsin
           icon: si-uptimekuma
         - title: ArgoCD
+          description: K8S Deployments
           url: https://argocd.dnull.systems
           icon: si-argo
         - title: Argo Workflows
+          description: CI Pipelines
           url: https://argo-workflows.dnull.systems/workflows/fect-infra?&limit=50
           icon: si-argo
         - title: Dockerhub Frontend
+          description: Dockerhub Registry
           url: https://hub.docker.com/r/2xnone/appelsin-fe
           icon: si-docker
         - title: Dockerhub Backend
+          description: Dockerhub Registry
           url: https://hub.docker.com/r/2xnone/appelsin-be
           icon: si-docker
