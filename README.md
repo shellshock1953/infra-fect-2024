@@ -20,17 +20,6 @@ Hosted on public dockerhub registries:
 - [Backend](https://hub.docker.com/r/2xnone/appelsin-be)
 
 ## Links
-### Prod
+### Dashboard
 
-- [BE](https://api.appelsin.dnull.systems)
-- [FE](https://appelsin.dnull.systems)
-
-### Stage
-
-- [BE](https://api.appelsin.stage.dnull.systems)
-- [FE](https://appelsin.stage.dnull.systems)
-
-### Infra
-- [ArgoCD](https://argocd.dnull.systems)
-- [Argo-Workflows](https://argo-workflows.dnull.systems)
-- [Grafana](https://grafana.dnull.systems)
+All related links can be found in [Dashboard](https://dashboard.appelsin.dnull.systems/)
