@@ -100,3 +100,9 @@ config:
         - title: Argo Workflows
           url: https://argo-workflows.dnull.systems/workflows/fect-infra?&limit=50
           icon: si-argo
+        - title: Dockerhub FE
+          url: https://hub.docker.com/r/2xnone/appelsin-fe
+          icon: si-dockerhub
+        - title: Dockerhub BE
+          url: https://hub.docker.com/r/2xnone/appelsin-be
+          icon: si-dockerhub
