@@ -69,6 +69,18 @@ config:
         - title: Jira
           icon: fab fa-jira
           url: https://soft-serve.atlassian.net/jira/software/projects/SSP/boards/2
+        - subItems:
+          - title: Prod FE
+            url: https://appelsin.dnull.systems
+            icon: si-homeassistant
+          - title: Prod BE
+            url: https://api.appelsin.dnull.systems
+        - subItems:
+          - title: Stage FE
+            url: https://appelsin.stage.dnull.systems
+            icon: si-homeassistant
+          - title: Stage BE
+            url: https://api.appelsin.stage.dnull.systems
     - name: System
       icon: si-linux
       displayData:
