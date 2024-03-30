@@ -66,9 +66,9 @@ config:
         collapsed: false
         hideForGuests: false
       items:
-        - title: Home
-          icon: fab fa-gitlab
-          url: https://gitlab.com/dnullproject/learning
+        - title: Jira
+          icon: fab fa-jira
+          url: https://soft-serve.atlassian.net/jira/software/projects/SSP/boards/2
     - name: System
       icon: si-linux
       displayData:
@@ -86,5 +86,5 @@ config:
           url: https://argocd.dnull.systems
           icon: si-argo
         - title: Argo Workflows
-          url: https://argo-workflows.dnull.systems
+          url: https://argo-workflows.dnull.systems/workflows/fect-infra?&limit=50
           icon: si-argo
