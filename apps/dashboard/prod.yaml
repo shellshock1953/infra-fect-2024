@@ -72,17 +72,17 @@ config:
           # Prod
         - title: Prod FE
           url: https://appelsin.dnull.systems
-          icon: si-site
+          icon: si-angular
         - title: Prod BE
           url: https://api.appelsin.dnull.systems
-          icon: si-site
+          icon: si-django
           # Stage
         - title: Stage FE
           url: https://appelsin.stage.dnull.systems
-          icon: si-site
+          icon: si-angular
         - title: Stage BE
           url: https://api.appelsin.stage.dnull.systems
-          icon: si-site
+          icon: si-django
     - name: System
       icon: si-linux
       displayData:
@@ -104,7 +104,7 @@ config:
           icon: si-argo
         - title: Dockerhub FE
           url: https://hub.docker.com/r/2xnone/appelsin-fe
-          icon: si-dockerhub
+          icon: si-docker
         - title: Dockerhub BE
           url: https://hub.docker.com/r/2xnone/appelsin-be
-          icon: si-dockerhub
+          icon: si-docker
