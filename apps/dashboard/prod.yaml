@@ -70,17 +70,17 @@ config:
           icon: fab fa-jira
           url: https://soft-serve.atlassian.net/jira/software/projects/SSP/boards/2
           # Prod
-        - title: Prod FE
+        - title: Production Frontend
           url: https://appelsin.dnull.systems
           icon: si-angular
-        - title: Prod BE
+        - title: Production Backend
           url: https://api.appelsin.dnull.systems
           icon: si-django
           # Stage
-        - title: Stage FE
+        - title: Staging Frontend
           url: https://appelsin.stage.dnull.systems
           icon: si-angular
-        - title: Stage BE
+        - title: Staging Backend
           url: https://api.appelsin.stage.dnull.systems
           icon: si-django
     - name: System
@@ -102,9 +102,9 @@ config:
         - title: Argo Workflows
           url: https://argo-workflows.dnull.systems/workflows/fect-infra?&limit=50
           icon: si-argo
-        - title: Dockerhub FE
+        - title: Dockerhub Frontend
           url: https://hub.docker.com/r/2xnone/appelsin-fe
           icon: si-docker
-        - title: Dockerhub BE
+        - title: Dockerhub Backend
           url: https://hub.docker.com/r/2xnone/appelsin-be
           icon: si-docker
