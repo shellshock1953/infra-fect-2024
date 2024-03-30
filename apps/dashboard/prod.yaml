@@ -1,0 +1,90 @@
+name: fect-dashboard
+domain: dashboard.appelsin.dnull.systems
+history: 3
+replicas: 1
+port: 80
+image:
+  repo: lissy93/dashy
+  tag: 2.1.1
+
+config:
+  appConfig:
+    auth:
+      enableGuestAccess: true
+    layout: vertical
+    iconSize: large
+    theme: adventure
+    language: en
+    hideComponents:
+      hideSearch: true
+      # hideSettings: true
+      hideSplashScreen: true
+  pageInfo:
+    title: SOFTSERVE FECT LNU 2024
+    # description: an entrypoint
+    navLinks:
+    - title: PROD
+      path: https://appelsin.dnull.systems
+    - title: STAGE
+      path: https://appelsin.stage.dnull.systems
+  sections:
+    - name: OpenSource
+      icon: mdi-open-source-initiative
+      displayData:
+        sortBy: default
+        rows: 2
+        cols: 2
+        collapsed: false
+        hideForGuests: false
+      items:
+        - title: GitHub
+          description: GitHub Org
+          icon: fab fa-github
+          url: https://github.com/softserve-appelsin
+          target: newtab
+        - title: BE Repo
+          description: Backend repository
+          icon: fab fa-github
+          url: https://github.com/softserve-appelsin/be
+          target: newtab
+        - title: FE Repo
+          description: Frontend repository
+          icon: fab fa-github
+          url: https://github.com/softserve-appelsin/fe
+          target: newtab
+        - title: Infra Repo
+          description: Infrastructure repository
+          icon: fab fa-github
+          url: https://github.com/softserve-appelsin/infra
+          target: newtab
+    - name: Project links
+      icon: mdi-school
+      displayData:
+        sortBy: default
+        rows: 1
+        cols: 2
+        collapsed: false
+        hideForGuests: false
+      items:
+        - title: Home
+          icon: fab fa-gitlab
+          url: https://gitlab.com/dnullproject/learning
+    - name: System
+      icon: si-linux
+      displayData:
+        sortBy: default
+        collapsed: false
+        hideForGuests: false
+      items:
+        - title: Grafana
+          url: http://grafana.dnull.systems/login
+          icon: si-grafana
+        - title: Status Page
+          url: https://uptime.dnull.systems/status/appelsin
+          icon: si-uptimekuma
+        - title: ArgoCD
+          url: https://argocd.dnull.systems
+          icon: si-argo
+        - title: Argo Workflows
+          url: https://argo-workflows.dnull.systems
+          icon: si-argo

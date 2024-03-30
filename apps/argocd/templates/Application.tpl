@@ -113,4 +113,26 @@ spec:
     syncOptions:
       - CreateNamespace=true
 ---
+# Dash
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fect-dashboard
+  namespace: argocd
+spec:
+  destination:
+    namespace: fect-{{ .Values.infra.env }}
+    server: https://kubernetes.default.svc
+  project: fect-{{ .Values.infra.env }}
+  source:
+    path: apps/dashboard
+    repoURL: https://github.com/softserve-appelsin/infra
+    targetRevision: {{ .Values.infra.branch }}
+    helm:
+      valueFiles:
+        {{- toYaml .Values.infra.values | nindent 8 }}
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+---
 {{ end }}
