@@ -115,7 +115,7 @@ spec:
                             value: 'SYSENV={{`{{inputs.parameters.branch}}`}}'
                           {{- end }}
 
-                      - name: deploy
+                      - name: deploy-stage
                         depends: build-image
                         templateRef:
                           name: deploy
@@ -127,11 +127,31 @@ spec:
                           - name: revision
                             value: main
                           - name: manifest 
-                            value: apps/{{ $app.name }}/{{`{{inputs.parameters.branch}}`}}.yaml
+                            value: apps/{{ $app.name }}/stage.yaml
                           - name: yaml_path
                             value: image.tag
                           - name: tag
                             value: '{{`{{inputs.parameters.short-sha}}`}}'
+                        when: "'{{`{{inputs.parameters.branch}}`}}' == 'stage'"
+
+                      - name: deploy-prod
+                        depends: build-image
+                        templateRef:
+                          name: deploy
+                          template: main
+                        arguments:
+                          parameters:
+                          - name: repo
+                            value: git@github.com:softserve-appelsin/infra.git
+                          - name: revision
+                            value: main
+                          - name: manifest 
+                            value: apps/{{ $app.name }}/prod.yaml
+                          - name: yaml_path
+                            value: image.tag
+                          - name: tag
+                            value: '{{`{{inputs.parameters.short-sha}}`}}'
+                        when: "'{{`{{inputs.parameters.branch}}`}}' == 'main'"
 
                   - name: exit-handler
                     inputs:
