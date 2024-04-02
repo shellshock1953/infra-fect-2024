@@ -1,3 +1,4 @@
+sysenv: stage
 name: fect-fe
 replicas: 1
 image:

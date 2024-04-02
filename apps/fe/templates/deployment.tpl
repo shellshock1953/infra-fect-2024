@@ -23,3 +23,8 @@ spec:
         envFrom:
         - secretRef:
             name: {{ .Values.name }}
+        command:
+          - "serve"
+          - "--configuration={{ .Values.sysenv }}"
+          - "--host=0.0.0.0"
+          - "--port=80"
