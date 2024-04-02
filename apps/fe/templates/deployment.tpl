@@ -24,6 +24,7 @@ spec:
         - secretRef:
             name: {{ .Values.name }}
         command:
+          - "ng"
           - "serve"
           - "--configuration={{ .Values.sysenv }}"
           - "--host=0.0.0.0"
