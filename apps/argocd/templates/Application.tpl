@@ -5,6 +5,10 @@ kind: Application
 metadata:
   name: fect-be-{{ .Values.be.env }}
   namespace: argocd
+  annotations:
+    notifications.argoproj.io/subscribe.on-sync-succeeded.telegram: {{ .Values.notification.channel }}
+    notifications.argoproj.io/subscribe.on-sync-failed.telegram: {{ .Values.notification.channel }}
+    notifications.argoproj.io/subscribe.on-health-degraded.telegram: {{ .Values.notification.channel }}
 spec:
   destination:
     namespace: fect-{{ .Values.be.env }}
@@ -29,6 +33,10 @@ kind: Application
 metadata:
   name: fect-fe-{{ .Values.fe.env }}
   namespace: argocd
+  annotations:
+    notifications.argoproj.io/subscribe.on-sync-succeeded.telegram: {{ .Values.notification.channel }}
+    notifications.argoproj.io/subscribe.on-sync-failed.telegram: {{ .Values.notification.channel }}
+    notifications.argoproj.io/subscribe.on-health-degraded.telegram: {{ .Values.notification.channel }}
 spec:
   destination:
     namespace: fect-{{ .Values.fe.env }}

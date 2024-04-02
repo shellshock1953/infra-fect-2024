@@ -8,3 +8,5 @@ fe:
   branch: main
   values:
     - prod.yaml
+notification:
+  channel: "-1001581870708"
