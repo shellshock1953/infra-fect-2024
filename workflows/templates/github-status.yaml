@@ -37,7 +37,7 @@ spec:
               https://api.github.com/repos/{{`{{inputs.parameters.repo}}`}}/statuses/{{`{{inputs.parameters.sha}}`}} \
               -d '{
                 "state": "{{`{{inputs.parameters.status}}`}}",
-                "target_url": "https://argo-workflows.dnull.systems/workflows/argo-events/{{`{{workflow.name}}`}}",
+                "target_url": "https://argo-workflows.dnull.systems/workflows/fect-infra/{{`{{workflow.name}}`}}",
                 "description": "{{`{{inputs.parameters.description}}`}}",
                 "context": "{{`{{inputs.parameters.name}}`}}"
               }'
