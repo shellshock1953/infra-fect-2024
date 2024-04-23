@@ -3,7 +3,7 @@ name: fect-fe
 replicas: 1
 image:
   repo: 2xnone/appelsin-fe
-  tag: 0c3f59d
+  tag: d544a68
 ingress:
   host: appelsin.stage.dnull.systems
   path: /
