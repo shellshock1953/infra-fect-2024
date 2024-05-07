@@ -24,9 +24,20 @@ env:
   - name: POSTGRESQL_USERNAME
     value: appelsin
   - name: POSTGRESQL_HOST
-    value: fect-be-stage-postgresql.fect-stage.svc
+    value: fect-be-stage-database.fect-stage.svc
   - name: POSTGRESQL_PORT
     value: "5432"
+database:
+  global:
+    postgresql:
+      auth:
+        username: appelsin
+        database: appelsin
+        existingSecret: fect-be
+        secretKeys:
+          adminPasswordKey: POSTGRESQL_ADMIN_PASSWORD
+          userPasswordKey: POSTGRESQL_PASSWORD
+# DEPRECATED
 postgresql:
   global:
     postgresql:
