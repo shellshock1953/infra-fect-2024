@@ -3,7 +3,7 @@ name: fect-be
 replicas: 1
 image:
   repo: 2xnone/appelsin-be
-  tag: "6d028c2"
+  tag: "64ff1d3"
 ingress:
   host: api.appelsin.stage.dnull.systems
   path: /
