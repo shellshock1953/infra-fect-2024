@@ -24,6 +24,12 @@ spec:
 
   templates:
   - name: main
+    retryStrategy:
+      limit: 2
+      backoff:
+        duration: "5s"
+        factor: 2
+        maxDuration: "120s"
     inputs:
       parameters:
         - name: repo
