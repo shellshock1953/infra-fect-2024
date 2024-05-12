@@ -35,6 +35,8 @@ env:
     value: "5432"
   - name: BUCKET_NAME
     value: appelsin.stage.dnull.systems
+  - name: ENV_TO_FORCE_MIGRATION
+    value: "true"
 database:
   global:
     postgresql:
